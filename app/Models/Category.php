@@ -19,4 +19,9 @@ class Category extends Model
         'description',
         'link',
     ];
+
+    public function artworks()
+    {
+        return $this->hasMany(ArtWork::class);
+    }
 }

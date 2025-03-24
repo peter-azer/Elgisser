@@ -19,4 +19,13 @@ class Gallery extends Model
         'logo',
         'images',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }

@@ -27,6 +27,17 @@ class User extends Authenticatable
         'gender',
     ];
 
+    public function gallery()
+    {
+        return $this->hasOne(Gallery::class);
+    }
+    public function artist(){
+        return $this->hasOne(Artist::class);
+    }
+    public function favorite(){
+        return $this->hasMany(Favorite::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

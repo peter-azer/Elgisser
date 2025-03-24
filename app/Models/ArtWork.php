@@ -20,10 +20,40 @@ class ArtWork extends Model
         'quantity',
         'one_of_a_kind',
         'cover_image',
-        'images',
+        // 'images',
         'description',
         'for_rent',
         'rent_price',
         'status'
     ];
+
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function rentedArtWork()
+    {
+        return $this->hasMany(RentedArtWork::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function artWorkImages()
+    {
+        return $this->hasMany(ArtWorkImages::class);
+    }
+
+    public function favorite()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

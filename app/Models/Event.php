@@ -24,4 +24,9 @@ class Event extends Model
         'event_status',
         'is_approved'
     ];
+
+    public function gallery()
+    {
+        return $this->belongsTo(Gallery::class);
+    }
 }

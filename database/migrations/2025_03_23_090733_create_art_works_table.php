@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->boolean('one_of_a_kind')->default(false);
             $table->text('cover_image');
-            $table->text('images')->nullable();
+            // $table->text('images')->nullable();
             $table->text('description')->nullable();
             $table->boolean('for_rent')->default(false);
             $table->double('rent_price')->nullable();

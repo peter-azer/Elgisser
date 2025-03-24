@@ -19,4 +19,22 @@ class Artist extends Model
         'artist_bio',
         'artist_image',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function artistImages(){
+        return $this->hasMany(PortfolioImage::class);
+    }
+
+    public function artWork(){
+        return $this->hasMany(ArtWork::class);
+    }
+    public function rentedArtWork(){
+        return $this->hasMany(RentedArtWork::class);
+    }
+    public function favorite(){
+        return $this->hasMany(Favorite::class);
+    }
 }
