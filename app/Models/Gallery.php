@@ -28,4 +28,8 @@ class Gallery extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    public function request(){
+        return $this->hasMany(RentRequest::class);
+    }
 }

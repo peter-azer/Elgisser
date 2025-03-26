@@ -56,4 +56,10 @@ class ArtWork extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+    public function request(){
+        return $this->hasMany(RentRequest::class);
+    }
+    public function history(){
+        return $this->hasMany(ArtworkViewHistory::class);
+    }
 }

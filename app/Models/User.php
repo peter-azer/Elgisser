@@ -39,6 +39,9 @@ class User extends Authenticatable
     public function favorite(){
         return $this->hasMany(Favorite::class);
     }
+    public function history(){
+        return $this->hasMany(ArtworkViewHistory::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

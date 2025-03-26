@@ -8,11 +8,27 @@ use App\Http\Controllers\Admin\BannersController as AdminBannersController;
 use App\Http\Controllers\Admin\ArtWorkController as AdminArtWorkController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RentedArtWorkController as AdminRentedArtWorkController;
+use App\Http\Controllers\Admin\RentRequestController as AdminRentRequestController;
+use App\Http\Controllers\BannersController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\RentedArtWorkController;
+use App\Http\Controllers\ArtWorkController;
+use App\Http\Controllers\RentRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+    return response()->json([
+        'user' =>  $user,
+        'role' =>  $user->role
+    ]);
 });
 
 Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->group(function(){
@@ -73,8 +89,74 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::put('/rended-artwork/edit/{rent}', [AdminRentedArtWorkController::class, 'update']);
     Route::put('/rended-artwork/status/{rent}', [AdminRentedArtWorkController::class, 'status']); #set status for the rented item
     Route::delete('/rended-artwork/{rent}', [AdminRentedArtWorkController::class, 'destroy']);
+
+    //Rent Request routes
+    Route::get('/requests', [RentRequestController::class, 'index']);
+    Route::get('/request/{request}', [RentRequestController::class, 'show']);
+    Route::post('/request/create', [RentRequestController::class, 'store']);
+    Route::put('/request/edit/{request}', [RentRequestController::class, 'store']);
+
+});
+
+// handle general routes for all the website
+Route::prefix('guest')->group(function (){
+    // artwork routes
+    Route::get('/artworks', [ArtWorkController::class, 'index']);
+    Route::get('/artwork/{artwork}', [ArtWorkController::class, 'show']);
+        // most viewed
+        Route::get('/artwork/most', [ArtWorkController::class, 'mostViewed']);
+        // recently viewed
+        Route::get('/artwork/recent', [ArtWorkController::class, 'recentViewed']);
+    //banners routes
+    Route::get('/banners', [BannersController::class, 'index']);
+    //categories routes
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/category/{category}', [CategoryController::class, 'show']);
+    //events routes
+    Route::get('/events', [EventController::class, 'index']);
+    // galleries
+    Route::get('/galleries', [GalleryController::class, 'index']);
+    Route::get('/gallery/{gallery}', [GalleryController::class, 'show']);
+    // portfolio
+    Route::get('/artists', [ArtistController::class, 'index']);
+    Route::get('/portfolio/{artist}', [ArtistController::class, 'show']);
+});
+
+
+//users routes
+Route::middleware(['auth:sanctum'])->group(function(){
+    // favorite routes
+    Route::get('/favorites/{id}', [FavoriteController::class, 'show']);
+    Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
+    Route::delete('/favorite/{artwork}', [FavoriteController::class, 'destroy']);
+
+    // handel order routes
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/order/{order}', [OrderController::class, 'show']);
+    Route::post('/place-order', [OrderController::class, 'checkout']);
 });
 
 // handel artist-role routes
+Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(function(){
+    // portfolio routes
+    Route::post('/portfolio/upload', [ArtistController::class, 'upload']); 
+    // Artwork routes
+    Route::get('/artworks', [ArtWorkController::class, 'showArtistArtwork']);
+    Route::post('/artwork/create', [ArtWorkController::class, 'store']);
+    Route::put('/artwork/edit/{artwork}', [ArtWorkController::class, 'update']);
+    // orders routes
+    Route::get('/orders', [OrderController::class, 'showArtistOrders']);
+    Route::get('/order/{order}', [OrderController::class, 'showArtistOrder']);
+    Route::put('/order/status/{order}', [OrderController::class, 'artistSetStatus']);
+
+    // Rent Requests
+    Route::get('/rent/requests', [RentRequestController::class, 'index']);
+    Route::get('/rent/request/{request}', [RentRequestController::class, 'show']);
+    Route::put('/rent/request/{artwork}', [RentRequestController::class, 'approve']);
+    Route::put('/rent/request/{artwork}', [RentRequestController::class, 'disapprove']);
+});
+
 // handle gallery-role routes
-// handle buyers-role routes
+Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function(){
+    
+});
