@@ -37,6 +37,7 @@ class RolePermissionSeeder extends Seeder
             'address' => 'fake address for testing',
             'image' => 'image.png',
             'gender' => 'male',
+            'role' => 'super-admin',
             'password' => Hash::make('adminadmin'),
         ]);
 
