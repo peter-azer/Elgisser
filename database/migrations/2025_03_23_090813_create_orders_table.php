@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('order_number')->unique();
             $table->decimal('total_amount', 10, 2);
             $table->string('currency', 3)->default('SAR');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'completed', 'canceled', 'shipped'])->default('pending');
             $table->timestamps();
         });
     }

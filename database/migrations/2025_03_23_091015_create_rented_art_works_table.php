@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('rental_end_date');
             $table->integer('rental_duration'); // in days
             $table->decimal('rental_price', 8, 2);
-            $table->string('rental_status')->default('active'); // e.g., active, completed, canceled
+            $table->enum('rental_status', ['active', 'returned'])->default('active'); // e.g., active, completed, canceled
             $table->string('payment_status')->default('pending'); // e.g., pending, completed, failed
             $table->string('payment_method')->nullable(); // e.g., credit card, PayPal
             $table->timestamps();

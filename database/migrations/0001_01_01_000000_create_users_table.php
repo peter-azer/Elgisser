@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('image')->default('https://www.pngkey.com/png/full/349-3499617_person-placeholder-person-placeholder.png');
             $table->enum('gender', ['male', 'female']);
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
