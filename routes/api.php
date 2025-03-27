@@ -158,5 +158,13 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
 
 // handle gallery-role routes
 Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function(){
-    
+    // request to create event
+    Route::post('/request/event', [EventController::class, 'store']);
+    // can see there event requests
+    Route::get('/requests/view', [EventController::class, 'galleryEvents']);
+    // request to rent artwork
+    Route::post('/request/artwork', [RentRequestController::class, 'store']);
+    // can see there artwork rent request
+    Route::post('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
+
 });
