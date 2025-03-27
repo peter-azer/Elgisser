@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Artist;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class ArtistController extends Controller
 {
@@ -14,7 +17,12 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $artists = Artist::all();
+            return response()->json($artists);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -22,7 +30,32 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'auth_papers' => 'required|file|mimes:pdf',
+                'artist_name' => 'required|string',
+                'experience' => 'required|string',
+                'artist_bio' => 'required|string',
+                'artist_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+
+            if ($request->hasFile('artist_image')) {
+                $imagePath = $request->file('artist_image')->store('artists_images', 'public');
+                $validatedData['artist_image'] = URL::to(Storage::url($imagePath));
+            }
+
+            if ($request->hasFile('auth_papers')) {
+                $paperPath = $request->file('auth_papers')->store('auth_papers', 'public');
+                $validatedData['auth_papers'] = URL::to(Storage::url($paperPath));
+            }
+
+            $artist = Artist::create($validatedData);
+            return response()->json(['message' => 'Artist created successfully'], 201);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -30,7 +63,11 @@ class ArtistController extends Controller
      */
     public function show(Artist $artist)
     {
-        //
+        try {
+            return response()->json($artist);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -38,7 +75,42 @@ class ArtistController extends Controller
      */
     public function update(Request $request, Artist $artist)
     {
-        //
+        try {
+
+            $validatedData = $request->validate([
+                'user_id' => 'sometimes|integer|exists:users,id',
+                'auth_papers' => 'sometimes|file|mimes:pdf',
+                'artist_name' => 'sometimes|string',
+                'experience' => 'sometimes|string',
+                'artist_bio' => 'sometimes|string',
+                'artist_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+
+            if ($request->hasFile('artist_image')) {
+                // delete old image
+                if ($artist->artistImage) {
+                    Storage::disk('public')->delete($artist->artist_image);
+                }
+                // upload the new image
+                $imagePath = $request->file('artist_image')->store('artists_images', 'public');
+                $validatedData['artist_image'] = URL::to(Storage::url($imagePath));
+            }
+
+            if ($request->hasFile('auth_papers')) {
+                // delete old papers
+                if ($artist->authPapers) {
+                    Storage::disk('public')->delete($artist->auth_papers);
+                    }
+                // upload the new papers
+                $paperPath = $request->file('auth_papers')->store('auth_papers', 'public');
+                $validatedData['auth_papers'] = URL::to(Storage::url($paperPath));
+            }
+
+            $artist = Artist::create($validatedData);
+            return response()->json(['message' => 'Artist created successfully'], 201);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -46,6 +118,17 @@ class ArtistController extends Controller
      */
     public function destroy(Artist $artist)
     {
-        //
+        try{
+            if ($artist->artistImage) {
+                Storage::disk('public')->delete($artist->artist_image);
+                }
+                if ($artist->authPapers) {
+                    Storage::disk('public')->delete($artist->auth_papers);
+                    }
+                    $artist->delete();
+                    return response()->json(['message' => 'Artist deleted successfully'], 200);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 }

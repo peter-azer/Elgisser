@@ -14,7 +14,7 @@ class ArtWorkController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

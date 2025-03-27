@@ -32,28 +32,28 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->group(function(){
-    //user routes
+    //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
     Route::get('/users/{user}', [AdminUsersController::class, 'show']);
     Route::post('/user/create', [AdminUsersController::class, 'store']);
     Route::put('/users/edit/{user}', [AdminUsersController::class, 'update']);
     Route::delete('/users/{user}', [AdminUsersController::class, 'destroy']);
 
-    //artists routes
+    //artists routes #Done to test
     Route::get('/artists', [AdminArtistController::class, 'index']);
     Route::get('/artists/{artist}', [AdminArtistController::class, 'show']);
     Route::post('/artists', [AdminArtistController::class, 'store']);
     Route::put('/artists/edit/{artist}', [AdminArtistController::class, 'update']);
     Route::delete('/artists/{artist}', [AdminArtistController::class, 'destroy']);
 
-    //gallery routes
+    //gallery routes #Done to test
     Route::get('/galleries', [AdminGalleryController::class, 'index']);
     Route::get('/galleries/{gallery}', [AdminGalleryController::class, 'show']);
     Route::post('/gallery/create', [AdminGalleryController::class, 'store']);
     Route::put('/gallery/edit/{gallery}', [AdminGalleryController::class, 'update']);
     Route::delete('/gallery/{gallery}', [AdminGalleryController::class, 'destroy']);
 
-    //events routes
+    //events routes #Done to test
     Route::get('/events', [AdminEventController::class, 'index']);
     Route::get('/events/{event}', [AdminEventController::class, 'show']);
     Route::post('/event/create', [AdminEventController::class, 'store']);
@@ -61,7 +61,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::put('/event/approve/{event}', [AdminEventController::class, 'approve']);
     Route::delete('/event/{event}', [AdminEventController::class, 'destroy']);
 
-    //banners routes
+    //banners routes #Done to test
     Route::get('/banners', [AdminBannersController::class, 'index']);
     Route::get('/banners/{banner}', [AdminBannersController::class, 'show']);
     Route::post('/banner/create', [AdminBannersController::class, 'store']);
@@ -76,7 +76,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::put('/artwork/edit/{artwork}', [AdminArtWorkController::class, 'update']);
     Route::delete('/artwork/{artwork}', [AdminArtWorkController::class, 'destroy']);
 
-    //orders routes
+    //orders routes #Done to test
     Route::get('/orders', [AdminOrderController::class, 'index']);  
     Route::get('/orders/{order}', [AdminOrderController::class, 'show']);
     Route::put('/orders/status/{order}', [AdminOrderController::class, 'setStatus']); #set order status and notify user
@@ -91,10 +91,10 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::delete('/rended-artwork/{rent}', [AdminRentedArtWorkController::class, 'destroy']);
 
     //Rent Request routes
-    Route::get('/requests', [RentRequestController::class, 'index']);
-    Route::get('/request/{request}', [RentRequestController::class, 'show']);
-    Route::post('/request/create', [RentRequestController::class, 'store']);
-    Route::put('/request/edit/{request}', [RentRequestController::class, 'store']);
+    Route::get('/requests', [AdminRentRequestController::class, 'index']);
+    Route::get('/request/{request}', [AdminRentRequestController::class, 'show']);
+    Route::post('/request/create', [AdminRentRequestController::class, 'store']);
+    Route::put('/request/edit/{request}', [AdminRentRequestController::class, 'store']);
 
 });
 

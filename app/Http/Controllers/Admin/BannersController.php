@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banners;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 class BannersController extends Controller
 {
 
@@ -13,7 +16,12 @@ class BannersController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $banners = Banners::all();
+            return response()->json($banners);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -21,7 +29,25 @@ class BannersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'url' => 'nullable|url',
+                'url_text' => 'nullable|string|max:255',
+            ]);
+
+            if($request->hasFile('image')){
+                $imagePath = $request->file('image')->store('banners', 'public');
+                $validatedData['image'] = URL::to(Storage::url($imagePath));
+            }
+
+            $banner = Banners::create($validatedData);
+            return response()->json(['message' => 'Banner created successfully', 'banner' => $banner]);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -29,7 +55,11 @@ class BannersController extends Controller
      */
     public function show(Banners $banner)
     {
-        //
+        try{
+            return response()->json($banner);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -37,7 +67,25 @@ class BannersController extends Controller
      */
     public function update(Request $request, Banners $banner)
     {
-        //
+        try{
+            $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'url' => 'nullable|url',
+            'url_text' => 'nullable|string|max:255',
+            ]);
+
+            if($request->hasFile('image')){
+            $imagePath = $request->file('image')->store('banners', 'public');
+            $validatedData['image'] = URL::to(Storage::url($imagePath));
+            }
+
+            $banner->update($validatedData);
+            return response()->json(['message' => 'Banner updated successfully', 'banner' => $banner]);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
 
     /**
@@ -45,6 +93,11 @@ class BannersController extends Controller
      */
     public function destroy(Banners $banner)
     {
-        //
+        try{
+            $banner->delete();
+            return response()->json(['message' => 'Banner deleted successfully']);
+            }catch(\Exception $error){
+                return response()->json(['error' => $error->getMessage()], 500);
+                }
     }
 }
