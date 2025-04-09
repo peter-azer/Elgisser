@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RentRequest;
 use App\Http\Requests\StoreRentRequestRequest;
 use App\Http\Requests\UpdateRentRequestRequest;
+use App\Models\Artist;
 
 class RentRequestController extends Controller
 {
@@ -13,7 +14,14 @@ class RentRequestController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user()->id;
+        $artist = Artist::where('user_id', $user)->first();
+        $rentRequests = RentRequest::where('artist_id', $artist->id)
+                        ->with('artwork', 'gallery')
+                        ->get();
+        return response()->json([
+            'rentRequests' => $rentRequests,
+        ]);
     }
 
     /**
@@ -29,23 +37,83 @@ class RentRequestController extends Controller
      */
     public function store(StoreRentRequestRequest $request)
     {
-        //
-    }
+        try{
+            $validatedData = $request->validate([
+                'gallery_id' => 'required|exists:galleries,id',
+                'art_work_id' => 'required|exists:artworks,id',
+                'artist_id' => 'required|exists:artists,id',
+                'rental_start_date' => 'required|date|after_or_equal:today',
+                'rental_end_date' => 'required|date|after:rental_start_date',
+                'rental_duration' => 'required|integer|min:1',
+                'status' => 'required|in:pending,approved,disapproved',
+            ]);
 
+            $rentRequest = RentRequest::create($validatedData); 
+            return response()->json([
+                'message' => 'Rent request created successfully',
+                'rentRequest' => $rentRequest,
+            ], 201);
+        }catch(\Exception $error){
+            return response()->json([
+                'message' => 'Error creating rent request',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
+    public function galleryRentRequests()
+    {
+        $user = auth()->user()->id;
+        $rentRequests = RentRequest::where('gallery_id', $user)
+                        ->with('artwork', 'artist')
+                        ->get();
+        return response()->json([
+            'rentRequests' => $rentRequests,
+        ]);
+    }
     /**
      * Display the specified resource.
      */
-    public function show(RentRequest $rentRequest)
+    public function show($id)
     {
-        //
+        $rentRequest = RentRequest::with('artwork', 'gallery')->find($id);
+        if (!$rentRequest) {
+            return response()->json([
+                'message' => 'Rent request not found',
+            ], 404);
+        }
+        return response()->json([
+            'rentRequest' => $rentRequest,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(RentRequest $rentRequest)
+    public function approve(RentRequest $rentRequest)
     {
-        //
+        try{
+            $rentRequest->status = 'approved';
+            $rentRequest->save();
+            return response()->json([
+                'message' => 'Rent request approved successfully',
+                'rentRequest' => $rentRequest,
+            ]);
+        }catch(\Exception $error){
+            return response()->json(['message'=> $error->getMessage()], $error->getCode());
+        }
+    }
+    public function disapprove(RentRequest $rentRequest)
+    {
+        try{
+            $rentRequest->status = 'disapprove';
+            $rentRequest->save();
+            return response()->json([
+                'message' => 'Rent request disapprove successfully',
+                'rentRequest' => $rentRequest,
+            ]);
+        }catch(\Exception $error){
+            return response()->json(['message'=> $error->getMessage()], $error->getCode());
+        }
     }
 
     /**

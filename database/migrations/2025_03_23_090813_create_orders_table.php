@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('order_number')->unique();
+            $table->string('address');
             $table->decimal('total_amount', 10, 2);
             $table->string('currency', 3)->default('SAR');
             $table->enum('status', ['pending', 'completed', 'canceled', 'shipped'])->default('pending');

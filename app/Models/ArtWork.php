@@ -20,7 +20,6 @@ class ArtWork extends Model
         'quantity',
         'one_of_a_kind',
         'cover_image',
-        // 'images',
         'description',
         'for_rent',
         'rent_price',

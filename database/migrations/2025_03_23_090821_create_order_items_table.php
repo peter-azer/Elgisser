@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->references('id')->on('art_works')->onDelete('cascade');
+            $table->foreignId('artist_id')->references('id')->on('artists')->onDelete('cascade');
             $table->integer('quantity')->default(1);
             $table->double('price');
             $table->double('total_price');

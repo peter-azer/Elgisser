@@ -13,7 +13,10 @@ class BannersController extends Controller
      */
     public function index()
     {
-        //
+        $banners = Banners::all();
+        return response()->json([
+            'banners' => $banners
+        ]);
     }
 
     /**

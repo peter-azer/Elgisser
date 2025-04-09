@@ -69,7 +69,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::put('/banner/order/{banner}', [AdminBannersController::class, 'order']); #order banners based on certain order not asc nor desc
     Route::delete('/banner/{banner}', [AdminBannersController::class, 'destroy']);
 
-    //Artwork(products) routes
+    //Artwork(products) routes #Done to test
     Route::get('/artworks', [AdminArtWorkController::class, 'index']);
     Route::get('/artwork/{artwork}', [AdminArtWorkController::class, 'show']);
     Route::post('/artwork/create', [AdminArtWorkController::class, 'store']);
@@ -82,89 +82,91 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::put('/orders/status/{order}', [AdminOrderController::class, 'setStatus']); #set order status and notify user
     Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy']);
 
-    //rented artwork routes
+    //rented artwork routes #Done to test
     Route::get('/rented-artworks', [AdminRentedArtworkController::class, 'index']);
-    Route::get('/rended-artwork', [AdminRentedArtWorkController::class, 'show']);
+    Route::get('/rended-artwork/{rentedArtWork}', [AdminRentedArtWorkController::class, 'show']);
     Route::post('/rended-artwork/create', [AdminRentedArtWorkController::class, 'store']);
-    Route::put('/rended-artwork/edit/{rent}', [AdminRentedArtWorkController::class, 'update']);
-    Route::put('/rended-artwork/status/{rent}', [AdminRentedArtWorkController::class, 'status']); #set status for the rented item
-    Route::delete('/rended-artwork/{rent}', [AdminRentedArtWorkController::class, 'destroy']);
+    Route::put('/rended-artwork/edit/{rentedArtWork}', [AdminRentedArtWorkController::class, 'update']);
+    Route::put('/rended-artwork/status/{rentedArtWork}', [AdminRentedArtWorkController::class, 'status']); #set status for the rented item
+    Route::delete('/rended-artwork/{rentedArtWork}', [AdminRentedArtWorkController::class, 'destroy']);
 
-    //Rent Request routes
+    //Rent Request routes #Done to test
     Route::get('/requests', [AdminRentRequestController::class, 'index']);
-    Route::get('/request/{request}', [AdminRentRequestController::class, 'show']);
+    Route::get('/request/{rentRequest}', [AdminRentRequestController::class, 'show']);
     Route::post('/request/create', [AdminRentRequestController::class, 'store']);
-    Route::put('/request/edit/{request}', [AdminRentRequestController::class, 'store']);
+    Route::put('/request/edit/{rentRequest}', [AdminRentRequestController::class, 'store']);
 
 });
 
 // handle general routes for all the website
 Route::prefix('guest')->group(function (){
-    // artwork routes
+    // artwork routes #Done to test
     Route::get('/artworks', [ArtWorkController::class, 'index']);
     Route::get('/artwork/{artwork}', [ArtWorkController::class, 'show']);
-        // most viewed
+        // most viewed #Done to test
         Route::get('/artwork/most', [ArtWorkController::class, 'mostViewed']);
-        // recently viewed
+        // recently viewed #Done to test
         Route::get('/artwork/recent', [ArtWorkController::class, 'recentViewed']);
-    //banners routes
+    //banners routes #Done to test
     Route::get('/banners', [BannersController::class, 'index']);
-    //categories routes
+    //categories routes #Done to test
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/category/{category}', [CategoryController::class, 'show']);
-    //events routes
+    //events routes #Done to test
     Route::get('/events', [EventController::class, 'index']);
-    // galleries
+    // galleries #Done to test
     Route::get('/galleries', [GalleryController::class, 'index']);
-    Route::get('/gallery/{gallery}', [GalleryController::class, 'show']);
-    // portfolio
+    Route::get('/gallery/{id}', [GalleryController::class, 'show']);
+    // portfolio #Done to test
     Route::get('/artists', [ArtistController::class, 'index']);
-    Route::get('/portfolio/{artist}', [ArtistController::class, 'show']);
+    Route::get('/portfolio/{id}', [ArtistController::class, 'show']);
 });
 
 
 //users routes
 Route::middleware(['auth:sanctum'])->group(function(){
-    // favorite routes
+    // favorite routes #Done to test
     Route::get('/favorites/{id}', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
     Route::delete('/favorite/{artwork}', [FavoriteController::class, 'destroy']);
 
-    // handel order routes
-    Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/order/{order}', [OrderController::class, 'show']);
+    // handel order routes #Done to test
+    Route::get('/orders/{id}', [OrderController::class, 'index']);
+    Route::get('/order/{id}', [OrderController::class, 'show']);
     Route::post('/place-order', [OrderController::class, 'checkout']);
 });
 
 // handel artist-role routes
 Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(function(){
-    // portfolio routes
+    // sign artist data #Done to test
+    Route::get('/sign', [ArtistController::class, 'store']);
+    // portfolio routes #Done to test
     Route::post('/portfolio/upload', [ArtistController::class, 'upload']); 
-    // Artwork routes
+    // Artwork routes #Done to test
     Route::get('/artworks', [ArtWorkController::class, 'showArtistArtwork']);
     Route::post('/artwork/create', [ArtWorkController::class, 'store']);
     Route::put('/artwork/edit/{artwork}', [ArtWorkController::class, 'update']);
-    // orders routes
+    // orders routes #Done to test
     Route::get('/orders', [OrderController::class, 'showArtistOrders']);
-    Route::get('/order/{order}', [OrderController::class, 'showArtistOrder']);
-    Route::put('/order/status/{order}', [OrderController::class, 'artistSetStatus']);
+    Route::get('/order/{id}', [OrderController::class, 'showArtistOrder']);
+    Route::put('/order/status/{id}', [OrderController::class, 'artistSetStatus']);
 
-    // Rent Requests
+    // Rent Requests #Done to test
     Route::get('/rent/requests', [RentRequestController::class, 'index']);
-    Route::get('/rent/request/{request}', [RentRequestController::class, 'show']);
-    Route::put('/rent/request/{artwork}', [RentRequestController::class, 'approve']);
-    Route::put('/rent/request/{artwork}', [RentRequestController::class, 'disapprove']);
+    Route::get('/rent/request/{id}', [RentRequestController::class, 'show']);
+    Route::put('/rent/request/approve/{id}', [RentRequestController::class, 'approve']);
+    Route::put('/rent/request/disapprove/{id}', [RentRequestController::class, 'disapprove']);
 });
 
 // handle gallery-role routes
 Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function(){
-    // request to create event
+    // request to create event #Done to test
     Route::post('/request/event', [EventController::class, 'store']);
-    // can see there event requests
+    // can see there event requests #Done to test
     Route::get('/requests/view', [EventController::class, 'galleryEvents']);
-    // request to rent artwork
+    // request to rent artwork #Done to test
     Route::post('/request/artwork', [RentRequestController::class, 'store']);
-    // can see there artwork rent request
+    // can see there artwork rent request #Done to test
     Route::post('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
 
 });

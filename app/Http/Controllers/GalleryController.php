@@ -13,7 +13,8 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        //
+        $galleries = Gallery::all();
+        return response()->json($galleries);
     }
 
     /**
@@ -35,9 +36,14 @@ class GalleryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Gallery $gallery)
+    public function show($id)
     {
-        //
+        try{
+            $gallery = Gallery::where('id', $id)->with('events')->get();
+            return response()->json($gallery);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 404);
+        }
     }
 
     /**

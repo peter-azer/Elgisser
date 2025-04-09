@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('art_work_id')->constrained()->onDelete('cascade');
             $table->foreignId('gallery_id')->constrained()->onDelete('cascade');
+            $table->foreignId('artist_id')->constrained()->onDelete('cascade');
             $table->date('rental_start_date');
             $table->date('rental_end_date');
             $table->integer('rental_duration'); // in days

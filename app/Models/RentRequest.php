@@ -13,6 +13,7 @@ class RentRequest extends Model
     protected $fillable = [
         'gallery_id',
         'art_work_id',
+        'artist_id',
         'rental_start_date',
         'rental_end_date',
         'rental_duration',
@@ -25,5 +26,8 @@ class RentRequest extends Model
 
     public function artwork(){
         return $this->belongsTo(ArtWork::class);
+    }
+    public function artist(){
+        return $this->belongsTo(Artist::class);
     }
 }

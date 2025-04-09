@@ -17,37 +17,49 @@ class FavoriteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreFavoriteRequest $request)
     {
-        //
+        try{
+            $favorite = Favorite::create([
+                'user_id' => $request->user_id,
+                'art_work_id' => $request->art_work_id,
+                'artist_id' => $request->artist_id,
+                'type' => $request->type,
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'data' => $favorite,
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while creating the favorite.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Favorite $favorite)
+    public function show($id)
     {
-        //
+        try{
+            $usersFavorites = Favorite::where('user_id', $id)->with(['artWork', 'artist'])->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $usersFavorites,
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while fetching favorites.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Favorite $favorite)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -61,6 +73,18 @@ class FavoriteController extends Controller
      */
     public function destroy(Favorite $favorite)
     {
-        //
+        try{
+            $favorite->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Favorite deleted successfully.',
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while deleting the favorite.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

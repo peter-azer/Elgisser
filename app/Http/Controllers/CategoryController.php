@@ -13,7 +13,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return response()->json([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -37,7 +40,16 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        try{
+            $category = Category::find($category->id)->with('artworks')->get();
+            return response()->json([
+                'category' => $category
+            ]); 
+        }catch(\Exception $e){
+            return response()->json([
+                'error' => 'Category not found'
+            ], 404);
+        }
     }
 
     /**
