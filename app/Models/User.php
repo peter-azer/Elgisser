@@ -27,6 +27,7 @@ class User extends Authenticatable
         'address',
         'image',
         'gender',
+        'role',
     ];
 
     public function gallery()

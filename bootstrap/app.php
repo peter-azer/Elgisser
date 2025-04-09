@@ -21,7 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'role' => RoleMiddleware::class
         ]);
-
+        $middleware->validateCsrfTokens(
+            except: [
+                '/*',
+                'api/*',
+                'sanctum/csrf-cookie',
+            ]);
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
