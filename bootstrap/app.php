@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
-
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'role' => RoleMiddleware::class
@@ -27,7 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 'api/*',
                 'sanctum/csrf-cookie',
             ]);
-        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
