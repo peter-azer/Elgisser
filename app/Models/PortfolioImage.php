@@ -14,9 +14,12 @@ class PortfolioImage extends Model
         'artist_id',
         'image_path',
         'image_name',
+        'image_name_ar',
         'image_type',
+        'image_type_ar',
         'image_size',
         'image_description',
+        'image_description_ar',
     ];
 
     public function artist()

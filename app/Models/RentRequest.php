@@ -18,6 +18,7 @@ class RentRequest extends Model
         'rental_end_date',
         'rental_duration',
         'status',
+        'status_ar',
     ];
 
     public function gallery(){

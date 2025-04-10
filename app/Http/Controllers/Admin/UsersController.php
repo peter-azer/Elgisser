@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules;
 class UsersController extends Controller
 {
@@ -32,14 +34,33 @@ class UsersController extends Controller
         
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', Rules\Password::defaults()],
+            'name_ar' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'phone' => ['required', 'string', 'max:15'],
+            'address' => ['required', 'string', 'max:255'],
+            'address_ar' => ['required', 'string', 'max:255'],
+            'image' => ['sometimes', 'image', 'max:2048'],
+            'gender' => ['required', 'in:male,female,other'],
+            'role' => ['required', 'string', 'exists:roles,name'],
         ]);
+        if($request->hasFile('image')){
+            $imagePath = $request->file('image')->store('users', 'public');
+            $image = URL::to(Storage::url($imagePath));
+            $request->merge(['image' => $image]);
+        }
 
         $user = User::create([
             'name' => $request->name,
+            'name_ar' => $request->name_ar,
             'email' => $request->email,
-            'password' => Hash::make($request->string('password')),
+            'password' => Hash::make($request->input('password')),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'address_ar' => $request->input('address_ar'),
+            'image' => $request->input('image'),
+            'gender' => $request->input('gender'),
+            'role' => $request->input('role'),
         ]);
         $role = $request->input('role');
         if ($role) {
@@ -65,9 +86,16 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', Rules\Password::defaults()],
+            'name' => ['sometimes', 'string', 'max:255'],
+            'name_ar' => ['sometimes', 'string', 'max:255'],
+            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
+            'phone' => ['sometimes', 'string', 'max:15'],
+            'address' => ['sometimes', 'string', 'max:255'],
+            'address_ar' => ['sometimes', 'string', 'max:255'],
+            'image' => ['sometimes', 'image', 'max:2048'],
+            'gender' => ['sometimes', 'in:male,female,other'],
+            'role' => ['sometimes', 'string', 'exists:roles,name'],
         ]);
 
         $user->update($validatedData);

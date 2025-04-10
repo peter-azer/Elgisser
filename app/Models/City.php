@@ -8,9 +8,9 @@ class City extends Model
 {
     protected $fillable = [
         'city_name',
+        'city_name_ar',
         'city_code',
         'country_id',
-        'area_id',
     ];
 
     protected $hidden = [

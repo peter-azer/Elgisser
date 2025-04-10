@@ -8,6 +8,7 @@ class Country extends Model
 {
     protected $fillable = [
         'country_name',
+        'country_name_ar',
         'country_code',
     ];
     protected $hidden = [

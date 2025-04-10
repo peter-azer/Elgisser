@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RentedArtWork;
+use App\Services\rentedArtworkNumberService;
 class RentedArtWorkController extends Controller
 {
 
@@ -25,13 +26,17 @@ class RentedArtWorkController extends Controller
     public function store(Request $request)
     {
         try{
+            $rentNumber = rentedArtworkNumberService::generate();
+            $request->input['rental_code'] = $rentNumber;
             $validatedData = $request->validate([
                 'art_work_id' => 'required|exists:art_works,id',
-                'user_id' => 'required|exists:users,id',
-                'start_date' => 'required|date',
-                'end_date' => 'required|date|after:start_date',
-                'price' => 'required|numeric',
-                'status' => 'required|string'
+                'gallery_id' => 'required|exists:galleries,id',
+                'rental_code' => 'required|string|unique:rented_art_works,rental_code',
+                'rental_start_date' => 'required|date',
+                'rental_end_date' => 'required|date|after:rental_start_date',
+                'rental_duration' => 'required|integer|min:1',
+                'rental_price' => 'required|numeric|min:0',
+                'rental_status' => 'required|in:active,returned'
             ]);
             $rentedArtWork = RentedArtWork::create($validatedData);
             return response()->json([
@@ -64,12 +69,14 @@ class RentedArtWorkController extends Controller
     {
         try {
             $validatedData = $request->validate([
-            'art_work_id' => 'sometimes|exists:art_works,id',
-            'user_id' => 'sometimes|exists:users,id',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'sometimes|date|after:start_date',
-            'price' => 'sometimes|numeric',
-            'status' => 'sometimes|string'
+                'art_work_id' => 'sometimes|exists:art_works,id',
+                'gallery_id' => 'sometimes|exists:galleries,id',
+                'rental_code' => 'sometimes|string|unique:rented_art_works,rental_code',
+                'rental_start_date' => 'sometimes|date',
+                'rental_end_date' => 'sometimes|date|after:rental_start_date',
+                'rental_duration' => 'sometimes|integer|min:1',
+                'rental_price' => 'sometimes|numeric|min:0',
+                'rental_status' => 'sometimes|in:active,returned'
             ]);
             $rentedArtWork->update($validatedData);
             return response()->json([
@@ -91,7 +98,7 @@ class RentedArtWorkController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'status' => 'required|string|in:active,returned'
+                'rental_status' => 'required|string|in:active,returned'
             ]);
             $rentedArtWork->update($validatedData);
             return response()->json([

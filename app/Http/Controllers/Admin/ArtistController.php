@@ -36,8 +36,11 @@ class ArtistController extends Controller
                 'user_id' => 'required|integer|exists:users,id',
                 'auth_papers' => 'required|file|mimes:pdf',
                 'artist_name' => 'required|string',
+                'artist_name_ar' => 'required|string',
                 'experience' => 'required|string',
+                'experience_ar' => 'required|string',
                 'artist_bio' => 'required|string',
+                'artist_bio_ar' => 'required|string',
                 'artist_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
@@ -81,8 +84,11 @@ class ArtistController extends Controller
                 'user_id' => 'sometimes|integer|exists:users,id',
                 'auth_papers' => 'sometimes|file|mimes:pdf',
                 'artist_name' => 'sometimes|string',
+                'artist_name_ar' => 'sometimes|string',
                 'experience' => 'sometimes|string',
+                'experience_ar' => 'sometimes|string',
                 'artist_bio' => 'sometimes|string',
+                'artist_bio_ar' => 'sometimes|string',
                 'artist_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 

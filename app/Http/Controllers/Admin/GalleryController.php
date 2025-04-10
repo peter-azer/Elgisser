@@ -33,7 +33,9 @@ class GalleryController extends Controller
                 'user_id' => 'required|integer|exists:users,id',
                 'auth_paper' => 'required|file|mimes:pdf',
                 'gallery_name' => 'required|string',
+                'gallery_name_ar' => 'required|string',
                 'gallery_description' => 'required|string',
+                'gallery_description_ar' => 'required|string',
                 'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'images' => 'nullable|array',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -87,7 +89,9 @@ class GalleryController extends Controller
             'user_id' => 'required|integer|exists:users,id',
             'auth_paper' => 'nullable|file|mimes:pdf',
             'gallery_name' => 'required|string',
+            'gallery_name_ar' => 'required|string',
             'gallery_description' => 'required|string',
+            'gallery_description_ar' => 'required|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'

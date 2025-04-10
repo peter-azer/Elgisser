@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             except: [
                 '/*',
                 'api/*',
-                'sanctum/csrf-cookie',
+                'sanctum/csrf-cookie',      
             ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

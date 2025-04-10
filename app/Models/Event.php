@@ -14,12 +14,13 @@ class Event extends Model
     protected $fillable = [
         'gallery_id',
         'event_name',
+        'event_name_ar',
         'event_start_date',
         'event_end_date',
         'event_duration',
         'event_location',
         'event_link',
-        'event_description',
+        'event_description_ar',
         'event_image',
         'event_status',
         'is_approved'

@@ -15,7 +15,9 @@ class Gallery extends Model
         'user_id',
         'auth_papers',
         'gallery_name',
+        'gallery_name_ar',
         'gallery_description',
+        'gallery_description_ar',
         'logo',
         'images',
     ];

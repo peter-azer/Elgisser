@@ -16,8 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('auth_papers')->nullable();
             $table->string('artist_name')->nullable();
+            $table->string('artist_name_ar')->nullable();
             $table->string('experience')->nullable();
+            $table->string('experience_ar')->nullable();
             $table->text('artist_bio')->nullable();
+            $table->text('artist_bio_ar')->nullable();
             $table->string('artist_image')->nullable();
             $table->softDeletes();
             $table->timestamps();

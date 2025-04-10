@@ -23,13 +23,10 @@ use App\Http\Controllers\RentRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    $user = $request->user();
-    return response()->json([
-        'user' =>  $user,
-        'role' =>  $user->role
-    ]);
-});
+Route::get('/user', function (Request $request) {
+    return $request->user();
+    
+})->middleware(['auth:sanctum']);
 
 Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->group(function(){
     //user routes #Done to test
@@ -139,7 +136,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
 // handel artist-role routes
 Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(function(){
     // sign artist data #Done to test
-    Route::get('/sign', [ArtistController::class, 'store']);
+    Route::post('/sign', [ArtistController::class, 'store']);
+    Route::put('/sign/{artist}', [ArtistController::class, 'update']);
     // portfolio routes #Done to test
     Route::post('/portfolio/upload', [ArtistController::class, 'upload']); 
     // Artwork routes #Done to test
@@ -160,6 +158,9 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
 
 // handle gallery-role routes
 Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function(){
+    // sign artist data #Done to test
+    Route::post('/sign', [GalleryController::class, 'store']);
+    Route::put('/sign/{artist}', [GalleryController::class, 'update']);
     // request to create event #Done to test
     Route::post('/request/event', [EventController::class, 'store']);
     // can see there event requests #Done to test

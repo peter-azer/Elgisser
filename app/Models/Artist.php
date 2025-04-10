@@ -15,8 +15,11 @@ class Artist extends Model
         'user_id',
         'auth_papers',
         'artist_name',
+        'artist_name_ar',
         'experience',
+        'experience_ar',
         'artist_bio',
+        'artist_bio_ar',
         'artist_image',
     ];
 

@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('gallery_id')->constrained()->cascadeOnDelete();
             $table->string('event_name');
+            $table->string('event_name_ar');
             $table->date('event_start_date');
             $table->date('event_end_date');
             $table->string('event_duration');
             $table->string('event_location');
             $table->string('event_link');
             $table->string('event_description');
+            $table->string('event_description_ar');
             $table->string('event_image')->nullable();
             $table->string('event_status')->default('active');
             $table->boolean('is_approved')->default(false);

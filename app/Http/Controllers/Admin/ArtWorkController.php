@@ -39,6 +39,7 @@ class ArtWorkController extends Controller
                 'artist_id' => 'required|exists:artists,id',
                 'category_id' => 'required|exists:categories,id',
                 'title' => 'required|string|max:255',
+                'title_ar' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'dimensions' => 'required|string|max:255',
                 'quantity' => 'required|integer',
@@ -47,9 +48,11 @@ class ArtWorkController extends Controller
                 'images' => 'array',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'description' => 'required|string',
+                'description_ar' => 'required|string',
                 'for_rent' => 'required|boolean',
                 'rent_price' => 'nullable|numeric',
                 'status'=> 'required|in:active,inactive',
+                'status_ar'=> 'required|in:active,نشط',
             ]);
             if ($request->hasFile('cover_image')) {
                 $coverImagePath = $request->file('cover_image')->store('artworks', 'public');
@@ -100,6 +103,7 @@ class ArtWorkController extends Controller
                 'artist_id' => 'required|exists:artists,id',
                 'category_id' => 'required|exists:categories,id',
                 'title' => 'required|string|max:255',
+                'title_ar' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'dimensions' => 'required|string|max:255',
                 'quantity' => 'required|integer',
@@ -108,9 +112,11 @@ class ArtWorkController extends Controller
                 'images' => 'array',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'description' => 'required|string',
+                'description_ar' => 'required|string',
                 'for_rent' => 'required|boolean',
                 'rent_price' => 'nullable|numeric',
                 'status' => 'required|in:active,inactive',
+                'status_ar' => 'required|in:active,نشط',
             ]);
 
             if ($request->hasFile('cover_image')) {

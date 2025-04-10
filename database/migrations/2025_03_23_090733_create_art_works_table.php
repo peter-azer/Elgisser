@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('artist_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('title');
+            $table->string('title_ar');
             $table->double('price');
             $table->string('dimensions');
             $table->integer('quantity')->default(1);
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->text('cover_image');
             // $table->text('images')->nullable();
             $table->text('description')->nullable();
+            $table->text('description_ar')->nullable();
             $table->boolean('for_rent')->default(false);
             $table->double('rent_price')->nullable();
             $table->string('status')->default('active');

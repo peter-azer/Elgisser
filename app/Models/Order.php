@@ -15,6 +15,7 @@ class Order extends Model
         'order_number',
         'total_amount',
         'address',
+        'address_ar',
         'currency',
         'status',
     ];
