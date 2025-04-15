@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('gallery_name_ar');
             $table->text('gallery_description')->nullable();
             $table->text('gallery_description_ar')->nullable();
-            $table->text('logo')->default('https://e7.pngegg.com/pngimages/1016/578/png-clipart-computer-icons-showroom-building-car-dealer-rectangle-orange.png');
+            $table->text('logo')->nullable();
             $table->text('images')->nullable();
             $table->softDeletes();
             $table->timestamps();
