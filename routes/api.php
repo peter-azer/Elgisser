@@ -23,10 +23,11 @@ use App\Http\Controllers\RentRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    
     return $request->user();
     
-})->middleware(['auth:sanctum']);
+});
 
 Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->group(function(){
     //user routes #Done to test

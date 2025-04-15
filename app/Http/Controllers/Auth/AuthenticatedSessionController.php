@@ -15,14 +15,20 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        try {
+            $request->authenticate();
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        return response()->json([
-            'message' => 'Logged in successfully',
-            'user' => $request->user(),
-        ]);
+            return response()->json([
+                'message' => 'Logged in successfully',
+                'user' => $request->user(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 401);
+        }
     }
 
     /**

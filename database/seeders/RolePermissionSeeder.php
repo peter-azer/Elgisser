@@ -32,9 +32,11 @@ class RolePermissionSeeder extends Seeder
 
         $superAdmin = User::firstOrCreate([
             'name' => 'Super Admin',
+            'name_ar' => 'Super Admin',
             'email' => 'super_admin@elgisser.com',
             'phone' => '01100000000',
             'address' => 'fake address for testing',
+            'address_ar' => 'fake address for testing',
             'image' => 'image.png',
             'gender' => 'male',
             'role' => 'super-admin',
