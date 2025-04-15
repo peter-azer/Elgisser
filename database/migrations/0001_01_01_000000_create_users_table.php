@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('address');
             $table->string('address_ar');
-            $table->text('image')->default('https://www.pngkey.com/png/full/349-3499617_person-placeholder-person-placeholder.png');
+            $table->text('image')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->rememberToken();
             $table->string('role');
