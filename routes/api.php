@@ -169,6 +169,6 @@ Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(fu
     // request to rent artwork #Done to test
     Route::post('/request/artwork', [RentRequestController::class, 'store']);
     // can see there artwork rent request #Done to test
-    Route::post('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
+    Route::get('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
 
 });
