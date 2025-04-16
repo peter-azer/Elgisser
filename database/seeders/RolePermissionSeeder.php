@@ -42,6 +42,6 @@ class RolePermissionSeeder extends Seeder
             'role' => 'super-admin',
             'password' => Hash::make('adminadmin'),
         ]);
-
+        $superAdmin->assignRole('super-admin');
     }
 }
