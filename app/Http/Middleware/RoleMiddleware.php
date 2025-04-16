@@ -18,7 +18,9 @@ class RoleMiddleware
     {
         try {
             if (!$request->user() || !$request->user()->hasRole($role)) {
-            abort(403, 'Unauthorized');
+            return response()->json(
+                $request->user()->hasRole($role)
+            );
             }
         } catch (\Exception $e) {
             abort(500, 'An error occurred: ' . $e->getMessage());
