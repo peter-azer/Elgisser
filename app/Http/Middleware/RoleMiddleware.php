@@ -16,9 +16,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if(!$request->user() || !$request->user()->hasRole($role)) {
-            return response()->json(['message' => 'You do not have the required role to access this resource.'], 403);
+        try {
+            if (!$request->user() || !$request->user()->hasRole($role)) {
+            abort(403, 'Unauthorized');
+            }
+        } catch (\Exception $e) {
+            abort(500, 'An error occurred: ' . $e->getMessage());
         }
+
         return $next($request);
     }
 }
