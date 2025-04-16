@@ -19,7 +19,7 @@ class RoleMiddleware
         try {
             if (!$request->user() || !$request->user()->hasRole($role)) {
             return response()->json(
-                $request->user()->hasRole($role)
+                $request->user()
             );
             }
         } catch (\Exception $e) {
