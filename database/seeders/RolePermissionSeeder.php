@@ -17,19 +17,73 @@ class RolePermissionSeeder extends Seeder
     {
         $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $editorRole = Role::firstOrCreate(['name' => 'editor']);
         $userRole = Role::firstOrCreate(['name' => 'user']);
         $artistRole = Role::firstOrCreate(['name' => 'artist']);
         $galleryRole = Role::firstOrCreate(['name' => 'gallery']);
         $permissions = [
-            'create' => 'create',
-            'read' => 'read',
-            'update' => 'update',
-            'delete' => 'delete',
+            // create permissions
+            'create admin' => 'create',
+            'create editor' => 'create',
+            'create user' => 'create',
+            'create artist' => 'create',
+            'create gallery' => 'create',
+        
+            // read permissions
+            'read admins table' => 'read',
+            'read users table' => 'read',
+            'read artists table' => 'read',
+            'read galleries table' => 'read',
+        
+            // update permissions
+            'update admin' => 'update',
+            'update user' => 'update',
+            'update artist' => 'update',
+            'update gallery' => 'update',
+            'approve rent request' => 'update',
+            'disapprove rent request' => 'update',
+            'approve event request' => 'update',
+            'disapprove event request' => 'update',
+        
+            // delete permissions
+            'delete admin' => 'delete',
+            'delete editor' => 'delete',
+            'delete user' => 'delete',
+            'delete artist' => 'delete',
+            'delete artwork' => 'delete',
+            'delete portfolio image' => 'delete',
+            'delete gallery' => 'delete',
         ];
-        $permissions = array_map(function ($permission) {
-            return Permission::firstOrCreate(['name' => $permission]);
-        }, $permissions);// create permissions
-
+        
+        foreach (array_keys($permissions) as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName]);
+        }
+        $superAdminRole->givePermissionTo([                        
+            'create admin' ,
+            'create editor' ,
+            'create user' ,
+            'create artist' ,
+            'create gallery' ,
+            'read admins table' ,
+            'read users table' ,
+            'read artists table' ,
+            'read galleries table' ,
+            'update admin' ,
+            'update user' ,
+            'update artist' ,
+            'update gallery' ,
+            'approve rent request' ,
+            'disapprove rent request' ,
+            'approve event request' ,
+            'disapprove event request' ,
+            'delete admin' ,
+            'delete editor' ,
+            'delete user' ,
+            'delete artist' ,
+            'delete artwork' ,
+            'delete portfolio image' ,
+            'delete gallery' ,
+        ]);
         $superAdmin = User::firstOrCreate([
             'name' => 'Super Admin',
             'name_ar' => 'Super Admin',

@@ -98,6 +98,17 @@ class UsersController extends Controller
             'role' => ['sometimes', 'string', 'exists:roles,name'],
         ]);
 
+        if ($request->hasFile('image')) {
+            // delete old image
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            // upload the new image
+            $imagePath = $request->file('image')->store('users', 'public');
+            $validatedData['image'] = URL::to(Storage::url($imagePath));
+        }
+
+
         $user->update($validatedData);
         $role = $request->input('role');
         if ($role) {
