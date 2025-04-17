@@ -31,41 +31,48 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'name_ar' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', 'string', 'max:15'],
-            'address' => ['required', 'string', 'max:255'],
-            'address_ar' => ['required', 'string', 'max:255'],
-            'image' => ['sometimes', 'image', 'max:2048'],
-            'gender' => ['required', 'in:male,female,other'],
-            'role' => ['required', 'string', 'exists:roles,name'],
-        ]);
-        if($request->hasFile('image')){
-            $imagePath = $request->file('image')->store('users', 'public');
-            $image = URL::to(Storage::url($imagePath));
-            $request->merge(['image' => $image]);
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'name_ar' => $request->name_ar,
-            'email' => $request->email,
-            'password' => Hash::make($request->input('password')),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'address_ar' => $request->input('address_ar'),
-            'image' => $request->input('image'),
-            'gender' => $request->input('gender'),
-            'role' => $request->input('role'),
-        ]);
-        $role = $request->input('role');
-        if ($role) {
-            $user->assignRole($role);
-        }
+            try{
+                    $request->validate([
+                        'name' => ['required', 'string', 'max:255'],
+                        'name_ar' => ['required', 'string', 'max:255'],
+                        'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+                        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                        'phone' => ['required', 'string', 'max:15'],
+                        'address' => ['required', 'string', 'max:255'],
+                        'address_ar' => ['required', 'string', 'max:255'],
+                        'image' => ['sometimes', 'image', 'max:2048'],
+                        'gender' => ['required', 'in:male,female,other'],
+                        'role' => ['required', 'string', 'exists:roles,name'],
+                    ]);
+                if($request->hasFile('image')){
+                    $imagePath = $request->file('image')->store('users', 'public');
+                    $image = URL::to(Storage::url($imagePath));
+                    $request->merge(['image' => $image]);
+                }
+                
+                $user = User::create([
+                    'name' => $request->name,
+                    'name_ar' => $request->name_ar,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->input('password')),
+                    'phone' => $request->input('phone'),
+                    'address' => $request->input('address'),
+                    'address_ar' => $request->input('address_ar'),
+                    'image' => $request->input('image'),
+                    'gender' => $request->input('gender'),
+                    'role' => $request->input('role'),
+                ]);
+                $role = $request->input('role');
+                if ($role) {
+                    $user->assignRole($role);
+                }
+                return response()->json([
+                    'message' => 'User created successfully',
+                    'user' => $user,
+                ], 201);
+            }catch(\Exception $error){
+                    return response()->json(['error' => $error->getMessage()], 500);
+                }
     }
 
     /**
@@ -85,34 +92,36 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validatedData = $request->validate([
-            'name' => ['sometimes', 'string', 'max:255'],
-            'name_ar' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['sometimes', 'string', 'max:15'],
-            'address' => ['sometimes', 'string', 'max:255'],
-            'address_ar' => ['sometimes', 'string', 'max:255'],
-            'image' => ['sometimes', 'image', 'max:2048'],
-            'gender' => ['sometimes', 'in:male,female,other'],
-            'role' => ['sometimes', 'string', 'exists:roles,name'],
-        ]);
-
-        if ($request->hasFile('image')) {
-            // delete old image
-            if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+        try {
+            $validatedData = $request->validate([
+                'name' => ['sometimes', 'string', 'max:255'],
+                'name_ar' => ['sometimes', 'string', 'max:255'],
+                'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:' . User::class],
+                'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
+                'phone' => ['sometimes', 'string', 'max:15'],
+                'address' => ['sometimes', 'string', 'max:255'],
+                'address_ar' => ['sometimes', 'string', 'max:255'],
+                'image' => ['sometimes', 'image', 'max:2048'],
+                'gender' => ['sometimes', 'in:male,female,other'],
+                'role' => ['sometimes', 'string', 'exists:roles,name'],
+            ]);
+            if ($request->hasFile('image')) {
+                // delete old image
+                if ($user->image) {
+                    Storage::disk('public')->delete($user->image);
+                }
+                // upload the new image
+                $imagePath = $request->file('image')->store('users', 'public');
+                $validatedData['image'] = URL::to(Storage::url($imagePath));
             }
-            // upload the new image
-            $imagePath = $request->file('image')->store('users', 'public');
-            $validatedData['image'] = URL::to(Storage::url($imagePath));
-        }
-
-
-        $user->update($validatedData);
-        $role = $request->input('role');
-        if ($role) {
-            $user->syncRoles([$role]);
+            $user->update($validatedData);
+            $role = $request->input('role');
+            if ($role) {
+                $user->syncRoles([$role]);
+            }
+            return response()->json(['message' => 'User updated successfully'], 200);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
         }
     }
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ArtWorkController as AdminArtWorkController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RentedArtWorkController as AdminRentedArtWorkController;
 use App\Http\Controllers\Admin\RentRequestController as AdminRentRequestController;
+use App\Http\Controllers\Admin\RolesPermissionController as AdminRolesPermissionController;
 use App\Http\Controllers\BannersController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
@@ -29,7 +30,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     
 });
 
-Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->group(function(){
+Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function(){
     //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
     Route::get('/users/{user}', [AdminUsersController::class, 'show']);
@@ -93,6 +94,10 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->prefix('dashboard')->gr
     Route::get('/request/{rentRequest}', [AdminRentRequestController::class, 'show']);
     Route::post('/request/create', [AdminRentRequestController::class, 'store']);
     Route::put('/request/edit/{rentRequest}', [AdminRentRequestController::class, 'store']);
+
+    // assign permission to users #Done to test
+    Route::get('/permissions', [AdminRolesPermissionController::class, 'index']);
+    Route::post('/permission/{id}', [AdminRolesPermissionController::class, 'assignPermission']);
 
 });
 
