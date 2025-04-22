@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Artist extends Model
+class Artist extends BaseModel 
 {
     /** @use HasFactory<\Database\Factories\ArtistFactory> */
     use HasFactory, SoftDeletes;

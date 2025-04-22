@@ -46,6 +46,7 @@ class User extends Authenticatable
         return $this->hasMany(ArtworkViewHistory::class);
     }
 
+    
     /**
      * The attributes that should be hidden for serialization.
      *

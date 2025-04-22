@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Favorite extends Model
+class Favorite extends BaseModel 
 {
     /** @use HasFactory<\Database\Factories\FavoriteFactory> */
     use HasFactory, SoftDeletes;

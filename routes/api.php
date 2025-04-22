@@ -99,6 +99,9 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::get('/permissions', [AdminRolesPermissionController::class, 'index']);
     Route::post('/permission/{id}', [AdminRolesPermissionController::class, 'assignPermission']);
 
+    // activity log routes #Done to test
+    Route::get('/activity-log', [AdminUsersController::class, 'getLogs']);
+
 });
 
 // handle general routes for all the website

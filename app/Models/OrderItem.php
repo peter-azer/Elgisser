@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model
+class OrderItem extends BaseModel 
 {
     /** @use HasFactory<\Database\Factories\OrderItemFactory> */
     use HasFactory;

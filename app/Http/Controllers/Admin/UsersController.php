@@ -29,9 +29,10 @@ class UsersController extends Controller
     }
 
     public function getLogs(){
-    $logs = Activity::latest()->get();
+    $logs = Activity::latest()->with('causer')->get();
     return response()->json($logs);
     }
+
     /**
      * Store a newly created resource in storage.
      */
