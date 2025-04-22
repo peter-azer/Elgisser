@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules;
+use Spatie\Activitylog\Models\Activity;
+
 class UsersController extends Controller
 {
 
@@ -26,6 +28,10 @@ class UsersController extends Controller
         }
     }
 
+    public function getLogs(){
+    $logs = Activity::latest()->get();
+    return response()->json($logs);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -36,7 +42,7 @@ class UsersController extends Controller
                         'name' => ['required', 'string', 'max:255'],
                         'name_ar' => ['required', 'string', 'max:255'],
                         'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-                        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                        'password' => ['required', Rules\Password::defaults()],
                         'phone' => ['required', 'string', 'max:15'],
                         'address' => ['required', 'string', 'max:255'],
                         'address_ar' => ['required', 'string', 'max:255'],
