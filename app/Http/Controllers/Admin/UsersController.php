@@ -21,7 +21,7 @@ class UsersController extends Controller
     public function index()
     {
         try{
-            $users = User::where('role', 'user');
+            $users = User::where('role', 'user')->get();
             return response()->json($users);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
