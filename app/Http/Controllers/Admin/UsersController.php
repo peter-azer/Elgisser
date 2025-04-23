@@ -21,7 +21,18 @@ class UsersController extends Controller
     public function index()
     {
         try{
-            $users = User::all();
+            $users = User::where('role', 'user');
+            return response()->json($users);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
+    }
+
+    public function getAdmins()
+    {
+        try{
+            $users = User::whereIn('role', ['admin', 'super-admin', 'editor'])
+                            ->get();
             return response()->json($users);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);

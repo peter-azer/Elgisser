@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function(){
     //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
+    Route::get('/admins', [AdminUsersController::class, 'getAdmins']);
     Route::get('/users/{user}', [AdminUsersController::class, 'show']);
     Route::post('/user/create', [AdminUsersController::class, 'store']);
     Route::put('/users/edit/{user}', [AdminUsersController::class, 'update']);
