@@ -104,7 +104,7 @@ class UsersController extends Controller
                 'name' => ['sometimes', 'string', 'max:255'],
                 'name_ar' => ['sometimes', 'string', 'max:255'],
                 'email' => ['sometimes', 'string', 'email', 'max:255'],
-                'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
+                'password' => ['sometimes', Rules\Password::defaults()],
                 'phone' => ['sometimes', 'string', 'max:15'],
                 'address' => ['sometimes', 'string', 'max:255'],
                 'address_ar' => ['sometimes', 'string', 'max:255'],
