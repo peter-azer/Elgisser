@@ -3,3 +3,8 @@ php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProv
 php artisan migrate
 
 php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-config"
+
+composer install
+php artisan migrate
+php artisan config:clear
+php artisan cache:clear
