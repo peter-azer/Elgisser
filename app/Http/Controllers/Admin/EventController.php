@@ -118,10 +118,10 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Event $rentRequest)
+    public function destroy(Event $event)
     {
         try {
-            $rentRequest->delete();
+            $event->delete();
             return response()->json(['message' => 'Event Deleted Successfully'], 200);
             } catch (\Exception $error) {
                 return response()->json(['error' => $error->getMessage()], 500);
