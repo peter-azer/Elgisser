@@ -49,8 +49,8 @@ class EventController extends Controller
                 'event_description' => 'nullable|string',
                 'event_description_ar' => 'nullable|string',
                 'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'event_status' => 'required|in:active,inactive',
-                'is_approved' => 'required|boolean'
+                // 'event_status' => 'required|in:active,inactive',
+                // 'is_approved' => 'required|boolean'
             ]);
             
             if ($request->hasFile('event_image')) {

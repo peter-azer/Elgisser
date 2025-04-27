@@ -20,6 +20,7 @@ class Event extends BaseModel
         'event_duration',
         'event_location',
         'event_link',
+        'event_description', 
         'event_description_ar',
         'event_image',
         'event_status',

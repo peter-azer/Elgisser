@@ -37,14 +37,12 @@ class EventController extends Controller
                 'event_start_date' => 'required|date',       
                 'event_end_date' => 'required|date|after_or_equal:event_start_date',       
                 'event_duration' => 'required|integer|min:1',       
-                'event_duration_ar' => 'required|integer|min:1',       
                 'event_location' => 'required|string|max:255',       
                 'event_link' => 'nullable|url',       
                 'event_description' => 'nullable|string',       
                 'event_description_ar' => 'nullable|string',       
                 'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',       
-                'event_status' => 'required|in:active,inactive',       
-                'event_status_ar' => 'required|in:active,نشط',       
+                'event_status' => 'required|in:active,inactive',  
                 'is_approved' => 'required|boolean'
             ]);
 
