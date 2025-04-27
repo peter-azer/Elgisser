@@ -30,10 +30,9 @@ class EventController extends Controller
     /**
      * approve event.
      */
-    public function approve(Request $request){
+    public function approve(Request $request, $event){
         try{
-            $eventId = $request->input('id');
-            $event = Event::findOrFail($eventId);
+            $event = Event::findOrFail($event);
             $event->is_approved = true;
             $event->update();
 
