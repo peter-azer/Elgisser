@@ -55,7 +55,7 @@ class EventController extends Controller
 
             return response()->json(['message'=>'Event Created Successfully'], 201);
         }catch(\Exception $error){
-            return response()->json(['message', $error->getMessage()], $error->getCode());
+            return response()->json(['message', $error->getMessage()], 500);
         }
     }
 
