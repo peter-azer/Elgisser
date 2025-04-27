@@ -30,11 +30,12 @@ class EventController extends Controller
     /**
      * approve event.
      */
-    public function approve(Request $id){
+    public function approve(Request $request){
         try{
-            $event = Event::findOrFail($id);
+            $eventId = $request->input('id');
+            $event = Event::findOrFail($eventId);
             $event->is_approved = true;
-            $event->save();
+            $event->update();
 
             return response()->json(['message' => 'Event Approved Successfully'], 200);
         }catch(\Exception $error){
