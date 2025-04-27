@@ -28,6 +28,20 @@ class EventController extends Controller
     }
 
     /**
+     * approve event.
+     */
+    public function approve(Request $id){
+        try{
+            $event = Event::findOrFail($id);
+            $event->is_approved = true;
+            $event->save();
+
+            return response()->json(['message' => 'Event Approved Successfully'], 200);
+        }catch(\Exception $error){
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
+    }
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
