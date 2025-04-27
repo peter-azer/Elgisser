@@ -31,7 +31,7 @@ class EventController extends Controller
     {
         try{
             $validatedData = $request->validate([
-                'gallery_id' => 'required|integer',       
+                'gallery_id' => 'required|integer|exists:galleries,id',       
                 'event_name' => 'required|string|max:255',       
                 'event_name_ar' => 'required|string|max:255',       
                 'event_start_date' => 'required|date',       
