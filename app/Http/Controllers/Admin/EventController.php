@@ -17,7 +17,10 @@ class EventController extends Controller
     public function index()
     {
         try{
-            $events = Event::all();
+            $events = Event::with('gallery', 'gallery.user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
             return response()->json($events);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
