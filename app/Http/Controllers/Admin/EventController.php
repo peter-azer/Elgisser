@@ -40,7 +40,7 @@ class EventController extends Controller
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
         }
-    }
+    }           
     /**
      * Store a newly created resource in storage.
      */
@@ -95,19 +95,19 @@ class EventController extends Controller
     {
         try {
             $validatedData = $request->validate([
-            'gallery_id' => 'required|integer',       
-            'event_name' => 'required|string|max:255',       
-            'event_name_ar' => 'required|string|max:255',       
-            'event_start_date' => 'required|date',       
-            'event_end_date' => 'required|date|after_or_equal:event_start_date',       
-            'event_duration' => 'required|integer|min:1',       
-            'event_location_ar' => 'required|string|max:255',       
-            'event_link' => 'nullable|url',       
-            'event_description' => 'nullable|string',       
-            'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',       
-            'event_status' => 'required|in:active,inactive',       
-            'event_status_ar' => 'required|in:active,نشط',       
-            'is_approved' => 'required|boolean'
+                'gallery_id' => 'sometime|integer|exists:galleries,id',       
+                'event_name' => 'sometime|string|max:255',       
+                'event_name_ar' => 'sometime|string|max:255',       
+                'event_start_date' => 'sometime|date',       
+                'event_end_date' => 'sometime|date|after_or_equal:event_start_date',       
+                'event_duration' => 'sometime|integer|min:1',       
+                'event_location' => 'sometime|string|max:255',       
+                'event_link' => 'nullable|url',       
+                'event_description' => 'nullable|string',       
+                'event_description_ar' => 'nullable|string',       
+                'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',       
+                'event_status' => 'nullable|in:active,inactive',  
+                'is_approved' => 'nullable|boolean'
             ]);
 
             if ($request->hasFile('event_image')) {
