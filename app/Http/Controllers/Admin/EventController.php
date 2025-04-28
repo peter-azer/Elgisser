@@ -95,13 +95,13 @@ class EventController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'gallery_id' => 'sometime|integer|exists:galleries,id',       
-                'event_name' => 'sometime|string|max:255',       
-                'event_name_ar' => 'sometime|string|max:255',       
-                'event_start_date' => 'sometime|date',       
-                'event_end_date' => 'sometime|date|after_or_equal:event_start_date',       
-                'event_duration' => 'sometime|integer|min:1',       
-                'event_location' => 'sometime|string|max:255',       
+                'gallery_id' => 'sometimes|integer|exists:galleries,id',       
+                'event_name' => 'sometimes|string|max:255',       
+                'event_name_ar' => 'sometimes|string|max:255',       
+                'event_start_date' => 'sometimes|date',       
+                'event_end_date' => 'sometimes|date|after_or_equal:event_start_date',       
+                'event_duration' => 'sometimes|integer|min:1',       
+                'event_location' => 'sometimes|string|max:255',       
                 'event_link' => 'nullable|url',       
                 'event_description' => 'nullable|string',       
                 'event_description_ar' => 'nullable|string',       
