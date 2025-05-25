@@ -8,3 +8,5 @@ composer install
 php artisan migrate
 php artisan config:clear
 php artisan cache:clear
+
+https://console.developers.google.com/
