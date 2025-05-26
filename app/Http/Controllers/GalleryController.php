@@ -32,6 +32,9 @@ class GalleryController extends Controller
      */
     public function store(StoreGalleryRequest $request)
     {
+        
+        $user = auth()->user()->id;
+        $request->merge(['user_id' => $user]);
         try {
             $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
