@@ -29,7 +29,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function(){
+Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function () {
     // dashboard route #Done to test
     Route::get('/', [DashboardController::class, 'index']);
     //user routes #Done to test
@@ -78,7 +78,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::delete('/artwork/{artwork}', [AdminArtWorkController::class, 'destroy']);
 
     //orders routes #Done to test
-    Route::get('/orders', [AdminOrderController::class, 'index']);  
+    Route::get('/orders', [AdminOrderController::class, 'index']);
     Route::get('/orders/{order}', [AdminOrderController::class, 'show']);
     Route::put('/orders/status/{order}', [AdminOrderController::class, 'setStatus']); #set order status and notify user
     Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy']);
@@ -103,18 +103,17 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
 
     // activity log routes #Done to test
     Route::get('/activity-log', [AdminUsersController::class, 'getLogs']);
-    
 });
 
 // handle general routes for all the website
-Route::prefix('guest')->group(function (){
+Route::prefix('guest')->group(function () {
     // artwork routes #Done to test
     Route::get('/artworks', [ArtWorkController::class, 'index']);
     Route::get('/artwork/{artwork}', [ArtWorkController::class, 'show']);
-        // most viewed #Done to test
-        Route::get('/artwork/most', [ArtWorkController::class, 'mostViewed']);
-        // recently viewed #Done to test
-        Route::get('/artwork/recent', [ArtWorkController::class, 'recentViewed']);
+    // most viewed #Done to test
+    Route::get('/artwork/most', [ArtWorkController::class, 'mostViewed']);
+    // recently viewed #Done to test
+    Route::get('/artwork/recent', [ArtWorkController::class, 'recentViewed']);
     //banners routes #Done to test
     Route::get('/banners', [BannersController::class, 'index']);
     //categories routes #Done to test
@@ -132,7 +131,7 @@ Route::prefix('guest')->group(function (){
 
 
 //users routes
-Route::middleware(['auth:sanctum'])->group(function(){
+Route::middleware(['auth:sanctum'])->group(function () {
     // favorite routes #Done to test
     Route::get('/favorites/{id}', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
@@ -145,12 +144,12 @@ Route::middleware(['auth:sanctum'])->group(function(){
 });
 
 // handel artist-role routes
-Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(function(){
+Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(function () {
     // sign artist data #Done to test
     Route::post('/sign', [ArtistController::class, 'store']);
     Route::put('/sign/{artist}', [ArtistController::class, 'update']);
     // portfolio routes #Done to test
-    Route::post('/portfolio/upload', [ArtistController::class, 'upload']); 
+    Route::post('/portfolio/upload', [ArtistController::class, 'upload']);
     // Artwork routes #Done to test
     Route::get('/artworks', [ArtWorkController::class, 'showArtistArtwork']);
     Route::post('/artwork/create', [ArtWorkController::class, 'store']);
@@ -168,7 +167,7 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
 });
 
 // handle gallery-role routes
-Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function(){
+Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(function () {
     // sign artist data #Done to test
     Route::post('/sign', [GalleryController::class, 'store']);
     Route::put('/sign/{artist}', [GalleryController::class, 'update']);
@@ -180,5 +179,4 @@ Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(fu
     Route::post('/request/artwork', [RentRequestController::class, 'store']);
     // can see there artwork rent request #Done to test
     Route::get('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
-
 });
