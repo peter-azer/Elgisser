@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RentedArtWorkController as AdminRentedArtWorkController;
 use App\Http\Controllers\Admin\RentRequestController as AdminRentRequestController;
 use App\Http\Controllers\Admin\RolesPermissionController as AdminRolesPermissionController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\BannersController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
@@ -29,6 +30,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function(){
+    // dashboard route #Done to test
+    Route::get('/', [DashboardController::class, 'index']);
     //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
     Route::get('/admins', [AdminUsersController::class, 'getAdmins']);
