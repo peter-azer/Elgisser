@@ -14,6 +14,10 @@ class ArtWork extends BaseModel
     protected $fillable = [
         'artist_id',
         'category_id',
+        'style_id',
+        'subject_id',
+        'media_id',
+        'material_id',
         'title',
         'title_ar',
         'price',
@@ -62,5 +66,21 @@ class ArtWork extends BaseModel
     }
     public function history(){
         return $this->hasMany(ArtworkViewHistory::class);
+    }
+    public function style()
+    {
+        return $this->belongsTo(Style::class);
+    }
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+    public function medium()
+    {
+        return $this->belongsTo(Medium::class, 'media_id', 'id');
+    }
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 }

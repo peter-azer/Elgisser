@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\RentedArtWorkController;
 use App\Http\Controllers\ArtWorkController;
+use App\Http\Controllers\FilterController;
 use App\Http\Controllers\RentRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +128,8 @@ Route::prefix('guest')->group(function () {
     // portfolio #Done to test
     Route::get('/artists', [ArtistController::class, 'index']);
     Route::get('/portfolio/{id}', [ArtistController::class, 'show']);
+    // filter options #Done to test
+    Route::get('/filters', [FilterController::class, 'index']);
 });
 
 

@@ -38,6 +38,10 @@ class ArtWorkController extends Controller
             $validatedData = $request->validate([
                 'artist_id' => 'required|exists:artists,id',
                 'category_id' => 'required|exists:categories,id',
+                'style_id' => 'required|exists:styles,id',
+                'subject_id' => 'required|exists:subjects,id',
+                'media_id' => 'required|exists:media,id',
+                'material_id' => 'required|exists:materials,id',
                 'title' => 'required|string|max:255',
                 'title_ar' => 'required|string|max:255',
                 'price' => 'required|numeric',
@@ -102,6 +106,10 @@ class ArtWorkController extends Controller
             $validatedData = $request->validate([
                 'artist_id' => 'required|exists:artists,id',
                 'category_id' => 'required|exists:categories,id',
+                'style_id' => 'required|exists:styles,id',
+                'subject_id' => 'required|exists:subjects,id',
+                'media_id' => 'required|exists:media,id',
+                'material_id' => 'required|exists:materials,id',
                 'title' => 'required|string|max:255',
                 'title_ar' => 'required|string|max:255',
                 'price' => 'required|numeric',

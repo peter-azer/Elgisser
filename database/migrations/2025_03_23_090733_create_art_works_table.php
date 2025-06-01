@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('artist_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('style_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('media_id')->constrained()->onDelete('cascade');
+            $table->foreignId('material_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('title_ar');
             $table->double('price');
