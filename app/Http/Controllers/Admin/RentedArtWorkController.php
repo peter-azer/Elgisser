@@ -27,7 +27,7 @@ class RentedArtWorkController extends Controller
     {
         try{
             $rentNumber = rentedArtworkNumberService::generate();
-            $request->input['rental_code'] = $rentNumber;
+            $request->merge(['rental_code' => $rentNumber]);
             $validatedData = $request->validate([
                 'art_work_id' => 'required|exists:art_works,id',
                 'gallery_id' => 'required|exists:galleries,id',
