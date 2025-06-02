@@ -49,7 +49,7 @@ class ArtWorkController extends Controller
                 'quantity' => 'required|integer',
                 'one_of_a_kind' => 'required|boolean',
                 'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'images' => 'array',
+                'images' => 'nullable|array',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'description' => 'required|string',
                 'description_ar' => 'required|string',
