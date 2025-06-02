@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\RentedArtWork;
 
-class rentedArtworkNumberService
+class RentedArtworkNumberService
 {
     
     public static function generate()

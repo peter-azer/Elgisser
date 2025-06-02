@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RentedArtWork;
-use App\Services\rentedArtworkNumberService;
+use App\Services\RentedArtworkNumberService;
 class RentedArtWorkController extends Controller
 {
 
@@ -26,7 +26,7 @@ class RentedArtWorkController extends Controller
     public function store(Request $request)
     {
         try{
-            $rentNumber = rentedArtworkNumberService::generate();
+            $rentNumber = RentedArtworkNumberService::generate();
             $request->merge(['rental_code' => $rentNumber]);
             $validatedData = $request->validate([
                 'art_work_id' => 'required|exists:art_works,id',
