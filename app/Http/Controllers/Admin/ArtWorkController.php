@@ -124,7 +124,7 @@ class ArtWorkController extends Controller
                 'for_rent' => 'required|boolean',
                 'rent_price' => 'nullable|numeric',
                 'status' => 'required|in:active,inactive',
-                'status_ar' => 'required|in:active,نشط',
+                // 'status_ar' => 'required|in:active,نشط',
             ]);
 
             if ($request->hasFile('cover_image')) {
