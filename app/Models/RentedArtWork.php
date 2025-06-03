@@ -24,14 +24,14 @@ class RentedArtWork extends BaseModel
     ];
     public function artWork()
     {
-        return $this->belongsTo(ArtWork::class);
+        return $this->belongsToMany(ArtWork::class);
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class);
     }
     public function gallery()
     {
-        return $this->belongsTo(Gallery::class);
+        return $this->belongsToMany(Gallery::class);
     }
 }
