@@ -183,7 +183,7 @@ class ArtWorkController extends Controller
             }
 
             // Delete the artwork images
-            foreach ($artwork->images as $image) {
+            foreach ($artwork->artWorkImages as $image) {
                 $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
                 Storage::disk('public')->delete($oldImagePath);
                 $image->delete();
