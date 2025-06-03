@@ -12,7 +12,7 @@ class RentedArtWork extends BaseModel
 
     protected $fillable = [
         'art_work_id',
-        'user_id',
+        'gallery_id',
         'start_date',
         'end_date',
         'price',
