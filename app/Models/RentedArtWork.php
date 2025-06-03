@@ -16,6 +16,7 @@ class RentedArtWork extends BaseModel
         'rental_code',
         'rental_start_date',
         'rental_end_date',
+        'rental_duration',
         'rental_price',
         'rental_status',
         'payment_status',
