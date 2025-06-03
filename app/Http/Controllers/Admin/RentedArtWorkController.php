@@ -38,6 +38,23 @@ class RentedArtWorkController extends Controller
                 'rental_price' => 'required|numeric|min:0',
                 'rental_status' => 'required|in:active,returned'
             ]);
+
+            // Check if the art work is available between the requested dates
+            $overlap = RentedArtWork::where('art_work_id', $validatedData['art_work_id'])
+                ->where(function ($query) use ($validatedData) {
+                    $query->where(function ($q) use ($validatedData) {
+                        $q->where('rental_start_date', '<=', $validatedData['rental_end_date'])
+                          ->where('rental_end_date', '>=', $validatedData['rental_start_date']);
+                    });
+                })
+                ->where('rental_status', 'active')
+                ->exists();
+
+            if ($overlap) {
+                return response()->json([
+                    'message' => 'The selected artwork is not available for the chosen dates.'
+                ], 422);
+            }
             $rentedArtWork = RentedArtWork::create($validatedData);
             return response()->json([
                 'message' => 'Rented Art Work created successfully',
