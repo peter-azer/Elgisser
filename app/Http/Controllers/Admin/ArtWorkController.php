@@ -182,15 +182,8 @@ class ArtWorkController extends Controller
                 Storage::disk('public')->delete($oldCoverImagePath);
             }
 
-            $artworkImages = $artwork->load('artWorkImages');
-            // Check if the artwork is already deleted (soft delete check)
-            if ($artwork->trashed()) {
-                return response()->json([
-                    'message' => 'Artwork already deleted'
-                ], 404);
-            }
             // Delete the artwork images
-            foreach ($artworkImages as $image) {
+            foreach ($artwork->images as $image) {
                 $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
                 Storage::disk('public')->delete($oldImagePath);
                 $image->delete();
