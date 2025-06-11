@@ -87,7 +87,7 @@ class ArtWorkController extends Controller
     public function show(ArtWork $artwork)
     {
         try{
-            $artwork->load('artist', 'category', 'images');
+            $artwork->load('artist', 'category', 'artWorkImages');
             return response()->json($artwork);  
         }catch(\Exception $e){
             return response()->json([
