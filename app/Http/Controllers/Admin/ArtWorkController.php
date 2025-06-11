@@ -160,7 +160,7 @@ class ArtWorkController extends Controller
 
             return response()->json([
                 'message' => 'Artwork updated successfully',
-                'artwork' => $artwork->load('artist', 'category', 'images')
+                'artwork' => $artwork->load('artist', 'category', 'artWorkImages')
             ]);
         } catch (\Exception $e) {
             return response()->json([
