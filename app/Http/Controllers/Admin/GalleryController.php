@@ -50,7 +50,7 @@ class GalleryController extends Controller
                     $imagePath = $image->store('galleries', 'public');// store the image in the public disk
                     $images[] = URL::to(Storage::url($imagePath));
                 }
-                $validatedData['images'] = $images;
+                $validatedData['images'] = json_encode($images);
             }
             
             if($request->hasFile('logo')){
