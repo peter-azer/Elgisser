@@ -31,7 +31,7 @@ class GalleryController extends Controller
 
             $validatedData = $request->validate([
                 'user_id' => 'required|integer|exists:users,id',
-                'auth_paper' => 'required|file|mimes:pdf',
+                'auth_papers' => 'required|file|mimes:pdf',
                 'gallery_name' => 'required|string',
                 'gallery_name_ar' => 'required|string',
                 'gallery_description' => 'required|string',
@@ -45,18 +45,18 @@ class GalleryController extends Controller
                 $images = [];
                 foreach($request->file('images') as $image){
                     $imagePath = $image->store('galleries', 'public');// store the image in the public disk
-                    $images[] = $imagePath;
+                    $images[] = URL::to(Storage::url($imagePath));
                 }
                 $validatedData['images'] = $images;
             }
             
             if($request->hasFile('logo')){
-                $authPaperPath = $request->file('logo')->store('logos','public');
-                $validatedData['logo'] = $authPaperPath;
+                $logo = $request->file('logo')->store('logos','public');
+                $validatedData['logo'] = URL::to(Storage::url($logo));
             }
-            if($request->hasFile('auth_paper')){
-                $authPaperPath = $request->file('auth_paper')->store('auth_papers','public');
-                $validatedData['auth_paper'] = $authPaperPath;
+            if($request->hasFile('auth_papers')){
+                $authPaperPath = $request->file('auth_papers')->store('auth_papers','public');
+                $validatedData['auth_papers'] = URL::to(Storage::url($authPaperPath));
             }
             
             return response()->json(['message'=>'Gallery created successfully'], 201);
@@ -87,7 +87,7 @@ class GalleryController extends Controller
 
             $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'auth_paper' => 'nullable|file|mimes:pdf',
+            'auth_papers' => 'nullable|file|mimes:pdf',
             'gallery_name' => 'required|string',
             'gallery_name_ar' => 'required|string',
             'gallery_description' => 'required|string',
@@ -106,9 +106,9 @@ class GalleryController extends Controller
             $validatedData['images'] = $images;
             }
 
-            if($request->hasFile('auth_paper')){
-            $authPaperPath = $request->file('auth_paper')->store('auth_papers', 'public');
-            $validatedData['auth_paper'] = $authPaperPath;
+            if($request->hasFile('auth_papers')){
+            $authPaperPath = $request->file('auth_papers')->store('auth_papers', 'public');
+            $validatedData['auth_papers'] = $authPaperPath;
             }
 
             if($request->hasFile('logo')){
