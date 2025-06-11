@@ -62,6 +62,7 @@ class GalleryController extends Controller
                 $validatedData['auth_papers'] = URL::to(Storage::url($authPaperPath));
             }
             
+            $gallery = Gallery::create($validatedData);
             return response()->json(['message'=>'Gallery created successfully'], 201);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
