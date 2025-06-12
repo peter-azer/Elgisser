@@ -40,6 +40,9 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::post('/user/create', [AdminUsersController::class, 'store']);
     Route::put('/users/edit/{user}', [AdminUsersController::class, 'update']);
     Route::delete('/users/{user}', [AdminUsersController::class, 'destroy']);
+    // unauthrized artists and galleries
+    Route::get('/users/not-artist', [UsersController::class, 'getUnauthorizedArtist']);
+    Route::get('/users/not-gallery', [UsersController::class, 'getUnauthorizedGalleries']);
 
     //artists routes #Done to test
     Route::get('/artists', [AdminArtistController::class, 'index']);

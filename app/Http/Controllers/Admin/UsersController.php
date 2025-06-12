@@ -28,6 +28,28 @@ class UsersController extends Controller
         }
     }
 
+    public function getUnauthorizedArtist(){
+        try{
+            $user = User::where('role', 'artist')
+                        ->whereDoesntHave('artist')
+                        ->get();
+            return response()->json($user);
+        }
+        catch(\Exception $error){
+            return response()->json(['error'=>$error->getMessage()], 500);
+        }
+    }
+    public function getUnauthorizedGalleries(){
+        try{
+            $user = User::where('role', 'gallery')
+                        ->whereDoesntHave('gallery')
+                        ->get();
+            return response()->json($user);
+        }
+        catch(\Exception $error){
+            return response()->json(['error'=>$error->getMessage()], 500);
+        }
+    }
     public function getAdmins()
     {
         try{
