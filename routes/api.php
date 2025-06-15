@@ -33,6 +33,9 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function () {
     // dashboard route #Done to test
     Route::get('/', [DashboardController::class, 'index']);
+    // unauthrized artists and galleries
+    Route::get('/users/noartist', [AdminUsersController::class, 'getUnauthorizedArtist']);
+    Route::get('/users/nogallery', [AdminUsersController::class, 'getUnauthorizedGalleries']);
     //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
     Route::get('/admins', [AdminUsersController::class, 'getAdmins']);
@@ -40,9 +43,6 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::post('/user/create', [AdminUsersController::class, 'store']);
     Route::put('/users/edit/{user}', [AdminUsersController::class, 'update']);
     Route::delete('/users/{user}', [AdminUsersController::class, 'destroy']);
-    // unauthrized artists and galleries
-    Route::get('/users/noartist', [AdminUsersController::class, 'getUnauthorizedArtist']);
-    Route::get('/users/nogallery', [AdminUsersController::class, 'getUnauthorizedGalleries']);
 
     //artists routes #Done to test
     Route::get('/artists', [AdminArtistController::class, 'index']);
