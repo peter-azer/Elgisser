@@ -33,7 +33,7 @@ class UsersController extends Controller
             $user = User::where('role', 'artist')
                         ->whereDoesntHave('artist')
                         ->get();
-            return response()->json($user);
+            return response()->json(['message'=> "done"]);
         }
         catch(\Exception $error){
             return response()->json(['error'=>$error->getMessage()], 500);
