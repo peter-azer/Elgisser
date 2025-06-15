@@ -41,8 +41,8 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::put('/users/edit/{user}', [AdminUsersController::class, 'update']);
     Route::delete('/users/{user}', [AdminUsersController::class, 'destroy']);
     // unauthrized artists and galleries
-    Route::get('/users/not-artist', [UsersController::class, 'getUnauthorizedArtist']);
-    Route::get('/users/not-gallery', [UsersController::class, 'getUnauthorizedGalleries']);
+    Route::get('/users/not-artist', [AdminUsersController::class, 'getUnauthorizedArtist']);
+    Route::get('/users/not-gallery', [AdminUsersController::class, 'getUnauthorizedGalleries']);
 
     //artists routes #Done to test
     Route::get('/artists', [AdminArtistController::class, 'index']);
