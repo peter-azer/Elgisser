@@ -34,8 +34,8 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     // dashboard route #Done to test
     Route::get('/', [DashboardController::class, 'index']);
     // unauthrized artists and galleries
-    Route::get('/users/noartist', [AdminUsersController::class, 'getUnauthorizedArtist']);
-    Route::get('/users/nogallery', [AdminUsersController::class, 'getUnauthorizedGalleries']);
+    Route::get('/users/not-artist', [AdminUsersController::class, 'getUnauthorizedArtist']);
+    Route::get('/users/not-gallery', [AdminUsersController::class, 'getUnauthorizedGalleries']);
     //user routes #Done to test
     Route::get('/users', [AdminUsersController::class, 'index']);
     Route::get('/admins', [AdminUsersController::class, 'getAdmins']);
