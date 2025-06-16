@@ -16,7 +16,7 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        $artists = Artist::with('user')->get();
+        $artists = Artist::with('user','portfolioImages')->get();
         return response()->json([
             'status' => true,
             'message' => 'Artists fetched successfully',
@@ -87,7 +87,7 @@ class ArtistController extends Controller
                 'image_description_ar' => 'nullable|string',
             ]);
             $artist = Artist::find($validatedData['artist_id']);
-            
+
             if ($request->hasFile('portfolio_images')) {
                 foreach ($request->file('portfolio_images') as $image) {
                     $imagePath = $image->store('portfolio_images', 'public');
@@ -101,7 +101,7 @@ class ArtistController extends Controller
                     ]);
                 }
             }
-            
+
             return response()->json(['message' => 'Portfolio images uploaded successfully'], 201);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
