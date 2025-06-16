@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ArtWork extends BaseModel 
+class ArtWork extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\ArtWorkFactory> */
     use HasFactory, SoftDeletes;
@@ -52,6 +52,9 @@ class ArtWork extends BaseModel
         return $this->hasMany(Order::class);
     }
 
+    public function cart(){
+        return $this->hasMany(Cart::class);
+    }
     public function artWorkImages()
     {
         return $this->hasMany(ArtWorkImages::class);

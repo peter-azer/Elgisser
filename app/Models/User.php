@@ -47,7 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ArtworkViewHistory::class);
     }
 
-    
+    public function cart(){
+        return $this->hasMany(Cart::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

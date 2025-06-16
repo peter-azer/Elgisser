@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\ArtWork;
 use App\Models\OrderItem;
 use App\Services\OrderNumberService;
-
+use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     /**
@@ -17,8 +17,8 @@ class OrderController extends Controller
     public function index($id)
     {
         try{
-            $orders = Order::where('user_id', $id)->get();  
-            return response()->json(['orders' => $orders]); 
+            $orders = Order::where('user_id', $id)->get();
+            return response()->json(['orders' => $orders]);
         }catch(\Exception $e){
             return response()->json(['error' => 'An error occurred while fetching orders.'], 500);
         }
@@ -78,18 +78,20 @@ class OrderController extends Controller
             $orderNumber = OrderNumberService::generate();
             $items = $request->input('items', []);
             $totalOrderPrice = 0;
-    
+
             // First validate items
-            foreach ($items as $item) {
-                validator($item, [
-                    'product_id' => 'required|integer|exists:products,id',
-                    'quantity' => 'required|integer|min:1',
-                    'price' => 'required|numeric|min:0',
-                ])->validate();
-    
-                $totalOrderPrice += $item['quantity'] * $item['price'];
-            }
-    
+foreach ($items as $item) {
+    $validator = Validator::make($item, [
+        'product_id' => 'required|integer|exists:products,id',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+    ]);
+
+    $validator->validate();
+
+    $totalOrderPrice += $item['quantity'] * $item['price'];
+}
+
             // Merge order-related fields
             $request->merge([
                 'user_id' => $userId,
@@ -97,7 +99,7 @@ class OrderController extends Controller
                 'total_amount' => $totalOrderPrice,
                 'status' => 'pending',
             ]);
-    
+
             // Validate order
             $validatedData = $request->validate([
                 'user_id' => 'required|integer|exists:users,id',
@@ -106,10 +108,10 @@ class OrderController extends Controller
                 'currency' => 'sometimes|string|max:3',
                 'status' => 'required|string|in:pending,completed,canceled',
             ]);
-    
+
             // Create order
             $order = Order::create($validatedData);
-    
+
             // Create order items
             foreach ($items as $item) {
                 $artwork = ArtWork::where('id', $item['product_id'])->firstOrFail();
@@ -121,7 +123,7 @@ class OrderController extends Controller
                     'price' => $item['price'],
                     'total_price' => $item['quantity'] * $item['price'],
                 ];
-    
+
                 validator($orderItemData, [
                     'order_id' => 'required|integer|exists:orders,id',
                     'product_id' => 'required|integer|exists:products,id',
@@ -130,17 +132,17 @@ class OrderController extends Controller
                     'price' => 'required|numeric|min:0',
                     'total_price' => 'required|numeric|min:0',
                 ])->validate();
-    
+
                 OrderItem::create($orderItemData);
             }
-    
+
             return response()->json($order);
-    
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
 
     /**
      * Display the specified resource.

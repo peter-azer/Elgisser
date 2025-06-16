@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\RentedArtWorkController;
 use App\Http\Controllers\ArtWorkController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\RentRequestController;
 use Illuminate\Http\Request;
@@ -142,7 +143,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
     Route::delete('/favorite/{artwork}', [FavoriteController::class, 'destroy']);
-
+    // Cart routes #Done to test
+    Route::get('/cart', [CartController::class, 'index']); # 2025-06-16
+    Route::post('/cart/add', [CartController::class, 'store']); # 2025-06-16
+    Route::put('/cart/update/{cart}', [CartController::class, 'update']); # 2025-06-16
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'destroy']); # 2025-06-16
     // handel order routes #Done to test
     Route::get('/orders/{id}', [OrderController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'show']);
