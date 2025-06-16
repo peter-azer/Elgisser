@@ -23,7 +23,7 @@ class FavoriteController extends Controller
     {
         try{
             $favorite = Favorite::create([
-                'user_id' => $request->user_id,
+                'user_id' => auth()->user()->id,
                 'art_work_id' => $request->art_work_id,
                 'artist_id' => $request->artist_id,
                 'type' => $request->type,
@@ -44,10 +44,11 @@ class FavoriteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show()
     {
+        $user_id = auth()->user()->id;
         try{
-            $usersFavorites = Favorite::where('user_id', $id)->with(['artWork', 'artist'])->get();
+            $usersFavorites = Favorite::where('user_id', $user_id)->with(['artWork', 'artist'])->get();
             return response()->json([
                 'status' => 'success',
                 'data' => $usersFavorites,

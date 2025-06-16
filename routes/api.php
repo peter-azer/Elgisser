@@ -139,7 +139,7 @@ Route::prefix('guest')->group(function () {
 //users routes
 Route::middleware(['auth:sanctum'])->group(function () {
     // favorite routes #Done to test
-    Route::get('/favorites/{id}', [FavoriteController::class, 'show']);
+    Route::get('/favorites', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
     Route::delete('/favorite/{artwork}', [FavoriteController::class, 'destroy']);
 
