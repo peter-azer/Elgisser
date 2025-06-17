@@ -17,7 +17,7 @@ class ArtWorkController extends Controller
     public function index()
     {
         try{
-            $artworks = ArtWork::with('artist', 'category', 'artist', 'style', 'subject', 'medium','material')->get();
+            $artworks = ArtWork::with('artist', 'category', 'style', 'subject', 'medium','material')->get();
             return response()->json([
                 'artworks' => $artworks
             ]);
@@ -87,7 +87,7 @@ class ArtWorkController extends Controller
     public function show(ArtWork $artwork)
     {
         try{
-            $artwork->load('artist', 'category', 'artWorkImages');
+            $artwork->load('artist', 'category', 'artWorkImages', 'style', 'subject', 'medium','material');
             return response()->json($artwork);
         }catch(\Exception $e){
             return response()->json([

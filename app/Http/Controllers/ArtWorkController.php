@@ -20,7 +20,7 @@ class ArtWorkController extends Controller
      */
     public function index()
     {
-        $artworks = ArtWork::with('artist', 'style', 'subject', 'medium','material')->get();
+        $artworks = ArtWork::with('artist','category', 'style', 'subject', 'medium','material')->get();
         return response()->json($artworks);
     }
     /**
@@ -29,7 +29,7 @@ class ArtWorkController extends Controller
     public function show(ArtWork $artWork)
     {
         try{
-            $artwork = ArtWork::with('artist', 'style', 'subject', 'medium','material')->findOrFail($artWork->id);
+            $artwork = ArtWork::with('artist', 'category', 'style', 'subject', 'medium','material', 'artWorkImages')->findOrFail($artWork->id);
             return response()->json($artwork);
         }catch(\Exception $e){
             return response()->json([
