@@ -114,7 +114,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
 Route::prefix('guest')->group(function () {
     // artwork routes #Done to test
     Route::get('/artworks', [ArtWorkController::class, 'index']);
-    Route::get('/artwork/{artwork}', [ArtWorkController::class, 'show']);
+    Route::get('/artwork/{id}', [ArtWorkController::class, 'show']);
     // most viewed #Done to test
     Route::get('/artwork/most', [ArtWorkController::class, 'mostViewed']);
     // recently viewed #Done to test
