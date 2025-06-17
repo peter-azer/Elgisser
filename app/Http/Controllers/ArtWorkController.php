@@ -26,11 +26,11 @@ class ArtWorkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ArtWork $id)
+    public function show($id)
     {
         try{
-            $artwork = ArtWork::with('artist', 'category', 'style', 'subject', 'medium','material', 'artWorkImages')->findOrFail($id);
-            return response()->json($artwork);
+            $artwork = ArtWork::with('artist', 'category', 'style', 'subject', 'medium','material', 'artWorkImages')->where('id', $id)->first();
+            return response()->json(['artwork'=>$artwork]);
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'Artwork not found',
