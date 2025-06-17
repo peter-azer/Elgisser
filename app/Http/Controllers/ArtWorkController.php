@@ -20,7 +20,7 @@ class ArtWorkController extends Controller
      */
     public function index()
     {
-        $artworks = ArtWork::with('artist')->get();
+        $artworks = ArtWork::with('artist', 'style', 'subject', 'medium','material')->get();
         return response()->json($artworks);
     }
     /**
@@ -29,14 +29,14 @@ class ArtWorkController extends Controller
     public function show(ArtWork $artWork)
     {
         try{
-            $artwork = ArtWork::with('artist')->findOrFail($artWork->id);
-            return response()->json($artwork);                          
+            $artwork = ArtWork::with('artist', 'style', 'subject', 'medium','material')->findOrFail($artWork->id);
+            return response()->json($artwork);
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'Artwork not found',
                 'error' => $e->getMessage()
             ], 404);
-        }   
+        }
     }
 
     /**
@@ -77,7 +77,7 @@ class ArtWorkController extends Controller
                     $imagePath = $image->store('artworks', 'public');
                     $imgPath= URL::to(Storage::url($imagePath));
                     $artworkImage = ArtWorkImages::create([
-                        'art_work_id' => $artwork->id, 
+                        'art_work_id' => $artwork->id,
                         'image_path' => $imgPath
                     ]);
                 }

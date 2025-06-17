@@ -17,7 +17,7 @@ class ArtWorkController extends Controller
     public function index()
     {
         try{
-            $artworks = ArtWork::with('artist', 'category')->get();
+            $artworks = ArtWork::with('artist', 'category', 'artist', 'style', 'subject', 'medium','material')->get();
             return response()->json([
                 'artworks' => $artworks
             ]);
@@ -26,7 +26,7 @@ class ArtWorkController extends Controller
                 'message' => 'Error fetching artworks',
                 'error' => $e->getMessage()
             ], 500);
-        }   
+        }
     }
 
     /**
@@ -68,7 +68,7 @@ class ArtWorkController extends Controller
                     $imagePath = $image->store('artworks', 'public');
                     $imgPath= URL::to(Storage::url($imagePath));
                     $artworkImage = ArtWorkImages::create([
-                        'art_work_id' => $artwork->id, 
+                        'art_work_id' => $artwork->id,
                         'image_path' => $imgPath
                     ]);
                 }
@@ -88,13 +88,13 @@ class ArtWorkController extends Controller
     {
         try{
             $artwork->load('artist', 'category', 'artWorkImages');
-            return response()->json($artwork);  
+            return response()->json($artwork);
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'Error fetching artwork',
                 'error' => $e->getMessage()
             ], 500);
-            }   
+            }
     }
 
     /**
