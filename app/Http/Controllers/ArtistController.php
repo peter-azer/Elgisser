@@ -77,7 +77,8 @@ class ArtistController extends Controller
 
             $validatedData = $request->validate([
                 'artist_id' => 'required|integer|exists:artists,id',
-                'portfolio_images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'portfolio_images'=> 'array',
+                'portfolio_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'image_name' => 'nullable|string',
                 'image_name_ar' => 'nullable|string',
                 'image_type' => 'nullable|string',
