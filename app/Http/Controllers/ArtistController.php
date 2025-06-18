@@ -79,13 +79,13 @@ class ArtistController extends Controller
                 'artist_id' => 'required|integer|exists:artists,id',
                 'portfolio_images'=> 'array',
                 'portfolio_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                'image_name' => 'nullable|string',
-                'image_name_ar' => 'nullable|string',
-                'image_type' => 'nullable|string',
-                'image_type_ar' => 'nullable|string',
-                'image_size' => 'nullable|integer',
-                'image_description' => 'nullable|string',
-                'image_description_ar' => 'nullable|string',
+                // 'image_name' => 'nullable|string',
+                // 'image_name_ar' => 'nullable|string',
+                // 'image_type' => 'nullable|string',
+                // 'image_type_ar' => 'nullable|string',
+                // 'image_size' => 'nullable|integer',
+                // 'image_description' => 'nullable|string',
+                // 'image_description_ar' => 'nullable|string',
             ]);
             $artist = Artist::find($validatedData['artist_id']);
 
@@ -94,11 +94,11 @@ class ArtistController extends Controller
                     $imagePath = $image->store('portfolio_images', 'public');
                     $artist->portfolioImages()->create([
                         'image_path' => URL::to(Storage::url($imagePath)),
-                        'artist_id' => $validatedData['artist_id'],
-                        'image_name' => $validatedData['image_name'],
-                        'image_type' => $validatedData['image_type'],
-                        'image_size' => $validatedData['image_size'],
-                        'image_description' => $validatedData['image_description'],
+                        // 'artist_id' => $validatedData['artist_id'],
+                        // 'image_name' => $validatedData['image_name'],
+                        // 'image_type' => $validatedData['image_type'],
+                        // 'image_size' => $validatedData['image_size'],
+                        // 'image_description' => $validatedData['image_description'],
                     ]);
                 }
             }
