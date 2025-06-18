@@ -51,7 +51,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
     Route::post('/artists', [AdminArtistController::class, 'store']);
     Route::put('/artists/edit/{artist}', [AdminArtistController::class, 'update']);
     Route::delete('/artists/{artist}', [AdminArtistController::class, 'destroy']);
-    Route::post('/portfolio/upload', [ArtistController::class, 'upload']);
+    Route::post('/artist/portfolio/upload', [ArtistController::class, 'upload']);
 
     //gallery routes #Done to test
     Route::get('/galleries', [AdminGalleryController::class, 'index']);
