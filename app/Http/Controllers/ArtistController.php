@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Artist;
 use App\Http\Requests\StoreArtistRequest;
 use App\Http\Requests\UpdateArtistRequest;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 
@@ -79,37 +79,26 @@ class ArtistController extends Controller
                 'artist_id' => 'required|integer|exists:artists,id',
                 'portfolio_images'=> 'array',
                 'portfolio_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                'image_name' => 'nullable|array',
-                'image_name.*' => 'nullable|string',
-                'image_name_ar' => 'nullable|array',
-                'image_name_ar.*' => 'nullable|string',
-                'image_type' => 'nullable|array',
-                'image_type.*' => 'nullable|string',
-                'image_type_ar' => 'nullable|array',
-                'image_type_ar.*' => 'nullable|string',
-                'image_size' => 'nullable|array',
-                'image_size.*' => 'nullable|integer',
-                'image_description' => 'nullable|array',
-                'image_description.*' => 'nullable|string',
-                'image_description_ar' => 'nullable|array',
-                'image_description_ar.*' => 'nullable|string',
+                'image_name' => 'nullable|string',
+                'image_name_ar' => 'nullable|string',
+                'image_type' => 'nullable|string',
+                'image_type_ar' => 'nullable|string',
+                'image_size' => 'nullable|integer',
+                'image_description' => 'nullable|string',
+                'image_description_ar' => 'nullable|string',
             ]);
             $artist = Artist::find($validatedData['artist_id']);
 
             if ($request->hasFile('portfolio_images')) {
-                $portfolioImages = $request->file('portfolio_images');
-                foreach ($portfolioImages as $index => $image) {
+                foreach ($request->file('portfolio_images') as $image) {
                     $imagePath = $image->store('portfolio_images', 'public');
                     $artist->portfolioImages()->create([
                         'image_path' => URL::to(Storage::url($imagePath)),
                         'artist_id' => $validatedData['artist_id'],
-                        'image_name' => $validatedData['image_name'][$index] ?? null,
-                        'image_type' => $validatedData['image_type'][$index] ?? null,
-                        'image_size' => $validatedData['image_size'][$index] ?? null,
-                        'image_description' => $validatedData['image_description'][$index] ?? null,
-                        'image_name_ar' => $validatedData['image_name_ar'][$index] ?? null,
-                        'image_type_ar' => $validatedData['image_type_ar'][$index] ?? null,
-                        'image_description_ar' => $validatedData['image_description_ar'][$index] ?? null,
+                        'image_name' => $validatedData['image_name'],
+                        'image_type' => $validatedData['image_type'],
+                        'image_size' => $validatedData['image_size'],
+                        'image_description' => $validatedData['image_description'],
                     ]);
                 }
             }
