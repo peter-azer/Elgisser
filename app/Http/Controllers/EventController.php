@@ -35,7 +35,7 @@ class EventController extends Controller
     public function upcomingEvents()
     {
         try{
-            $events = Event::where('event_start_date', '>', now())->get();
+            $events = Event::where('event_start_date', '>', now()->format('Y-m-d'))->get();
             $months = collect([
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
@@ -46,19 +46,24 @@ class EventController extends Controller
                     ];
                 })->keyBy('month');
 
-                foreach ($events as $event){
-                    $monthName = Carbon::parse($event->event_start_date)->format('F');
+                foreach ($events as $event) {
+                       $monthName = Carbon::parse($event->event_start_date)->format('F');
 
-                    if(isset($months[$monthName])){
-                        $months[$monthName]['events'][] = [
-                            'name' => $event->event_name,
-                            'name_ar' => $event->event_name_ar,
-                            'start_date' => $event->event_start_date,
-                            'end_date' => $event->event_end_date,
-                            'duration' => $event->event_duration,
-                        ];
-                    }
+                       if ($months->has($monthName)) {
+                           $monthData = $months->get($monthName);
+
+                           $monthData['events'][] = [
+                               'name' => $event->event_name,
+                               'name_ar' => $event->event_name_ar,
+                               'start_date' => $event->event_start_date,
+                               'end_date' => $event->event_end_date,
+                               'duration' => $event->event_duration,
+                           ];
+
+                           $months->put($monthName, $monthData);
+                       }
                 }
+
                 return response()->json(array_values($months->all()));
             }catch(\Exception $e){
                 return response()->json([
