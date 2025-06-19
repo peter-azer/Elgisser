@@ -127,7 +127,7 @@ Route::prefix('guest')->group(function () {
     Route::get('/category/{category}', [CategoryController::class, 'show']);
     //events routes #Done to test
     Route::get('/events', [EventController::class, 'index']); #get all events 2025-06-19
-    Route::get('/events/upcoming', [EventController::class, 'upcomingEvents']); #get upcoming events 2025-06-19
+    Route::get('/events/schedule', [EventController::class, 'scheduledEvents']); #get scheduled events 2025-06-19
     // galleries #Done to test
     Route::get('/galleries', [GalleryController::class, 'index']);
     Route::get('/gallery/{id}', [GalleryController::class, 'show']);

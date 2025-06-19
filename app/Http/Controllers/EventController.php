@@ -32,10 +32,10 @@ class EventController extends Controller
         }
     }
 
-    public function upcomingEvents()
+    public function scheduledEvents()
     {
         try{
-            $events = Event::all();
+            $events = Event::where('is_approved', true)->get();
             $months = collect([
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
