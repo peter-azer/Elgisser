@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
 
 class EventController extends Controller
 {
@@ -16,10 +17,32 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::all();
-        return response()->json([
-            'events' => $events
-        ]);
-        
+
+        $months = collect([
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ])->map(function($month){
+            return [
+                'month' => $month,
+                'events' => []
+            ];
+        })->keyBy('month');
+
+        foreach ($events as $event){
+            $monthName = strtolower(Carbon::parse($event->event_start_date)->format('F'));
+
+            if(isset($months[$monthName])){
+                $months[$monthName]['events'][] = [
+                    'name' => $event->event_name,
+                    'name_ar' => $event->event_name_ar,
+                    'start_date' => $event->event_start_date,
+                    'end_date' => $event->event_end_date,
+                    'duration' => $event->event_duration,
+                ];
+            }
+        }
+        return response()->json(array_values($months->all()));
+
     }
 
     /**
@@ -52,12 +75,12 @@ class EventController extends Controller
                 // 'event_status' => 'required|in:active,inactive',
                 // 'is_approved' => 'required|boolean'
             ]);
-            
+
             if ($request->hasFile('event_image')) {
                 $coverImagePath = $request->file('event_image')->store('event_image', 'public');
                 $validatedData['event_image'] = URL::to(Storage::url($coverImagePath));
             }
-            
+
             $event = Event::create($validatedData);
             return response()->json([
                 'message' => 'Event created successfully',
