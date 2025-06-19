@@ -16,33 +16,56 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::all();
-
-        $months = collect([
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ])->map(function($month){
-            return [
-                'month' => $month,
-                'events' => []
-            ];
-        })->keyBy('month');
-
-        foreach ($events as $event){
-            $monthName = strtolower(Carbon::parse($event->event_start_date)->format('F'));
-
-            if(isset($months[$monthName])){
-                $months[$monthName]['events'][] = [
-                    'name' => $event->event_name,
-                    'name_ar' => $event->event_name_ar,
-                    'start_date' => $event->event_start_date,
-                    'end_date' => $event->event_end_date,
-                    'duration' => $event->event_duration,
-                ];
-            }
+        try {
+            $events = Event::all();
+            return response()->json([
+                'status' => true,
+                'message' => 'Events fetched successfully',
+                'data' => $events
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to fetch events',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        return response()->json(array_values($months->all()));
+    }
 
+    public function upcomingEvents()
+    {
+        try{
+            $events = Event::where('event_start_date', '>', now())->get();
+            $months = collect([
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+                ])->map(function($month){
+                    return [
+                        'month' => $month,
+                        'events' => []
+                    ];
+                })->keyBy('month');
+
+                foreach ($events as $event){
+                    $monthName = Carbon::parse($event->event_start_date)->format('F');
+
+                    if(isset($months[$monthName])){
+                        $months[$monthName]['events'][] = [
+                            'name' => $event->event_name,
+                            'name_ar' => $event->event_name_ar,
+                            'start_date' => $event->event_start_date,
+                            'end_date' => $event->event_end_date,
+                            'duration' => $event->event_duration,
+                        ];
+                    }
+                }
+                return response()->json(array_values($months->all()));
+            }catch(\Exception $e){
+                return response()->json([
+                    'message' => 'Failed to fetch events',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
     }
 
     /**
