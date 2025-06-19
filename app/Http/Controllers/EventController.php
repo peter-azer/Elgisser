@@ -35,7 +35,7 @@ class EventController extends Controller
     public function upcomingEvents()
     {
         try{
-            $events = Event::where('event_start_date', '>', now()->format('Y-m-d'))->get();
+            $events = Event::all();
             $months = collect([
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
