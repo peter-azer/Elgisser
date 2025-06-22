@@ -36,7 +36,7 @@ class CartController extends Controller
             ]), ['user_id' => $userID]));
             return response()->json(['cart' => $cart], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while adding to the cart.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
