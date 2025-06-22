@@ -26,7 +26,7 @@ class FavoriteController extends Controller
                 'user_id' => auth()->user()->id,
                 'art_work_id' => $artwork,
                 'artist_id' => $request->artist_id,
-                'type' => $request->type,
+                'type' => $request->type ?? 'artwork', // Default to 'artwork' if not provided
             ]);
             return response()->json([
                 'status' => 'success',
