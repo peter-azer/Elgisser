@@ -72,9 +72,10 @@ class FavoriteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Favorite $favorite)
+    public function destroy($id)
     {
         try{
+            $favorite = Favorite::findOrFail($id);
             $favorite->delete();
             return response()->json([
                 'status' => 'success',

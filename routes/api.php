@@ -144,7 +144,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // favorite routes #Done to test
     Route::get('/favorites', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
-    Route::delete('/favorite/{artwork}', [FavoriteController::class, 'destroy']);
+    Route::delete('/favorite/{id}', [FavoriteController::class, 'destroy']);
     // Cart routes #Done to test
     Route::get('/cart', [CartController::class, 'index']); # 2025-06-16
     Route::post('/cart/add', [CartController::class, 'store']); # 2025-06-16
