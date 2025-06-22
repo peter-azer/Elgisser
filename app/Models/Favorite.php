@@ -22,15 +22,15 @@ class Favorite extends BaseModel
     ];
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
     public function artWork()
     {
-        return $this->hasMany(ArtWork::class);
+        return $this->belongsTo(ArtWork::class);
     }
     public function artist()
     {
-        return $this->hasMany(Artist::class);
+        return $this->belongsTo(Artist::class);
     }
     public function isArtWork()
     {
