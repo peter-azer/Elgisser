@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Favorite extends BaseModel 
+class Favorite extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\FavoriteFactory> */
     use HasFactory, SoftDeletes;
@@ -22,15 +22,15 @@ class Favorite extends BaseModel
     ];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class);
     }
     public function artWork()
     {
-        return $this->belongsTo(ArtWork::class);
+        return $this->hasMany(ArtWork::class);
     }
     public function artist()
     {
-        return $this->belongsTo(Artist::class);
+        return $this->hasMany(Artist::class);
     }
     public function isArtWork()
     {
