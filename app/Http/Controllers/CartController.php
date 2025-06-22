@@ -29,11 +29,12 @@ class CartController extends Controller
     {
         try {
             $userID = auth()->user()->id;
-            $cart = Cart::create(array_merge($request->validate([
+            $validatedData = $request->validate([
                 'artwork_id' => 'required|exists:art_works,id',
                 'quantity' => 'required|integer|min:1',
                 'price' => 'required|numeric|min:0',
-            ]), ['user_id' => $userID]));
+            ]);
+            $cart = Cart::create(array_merge($validatedData, ['user_id' => $userID]));
             return response()->json(['cart' => $cart], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
