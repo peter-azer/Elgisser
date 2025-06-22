@@ -33,7 +33,6 @@ class CartController extends Controller
                 'artwork_id' => 'required|exists:art_works,id',
                 'quantity' => 'required|integer|min:1',
                 'price' => 'required|numeric|min:0',
-                'status' => 'required|string|in:pending,completed,cancelled',
             ]), ['user_id' => $userID]));
             return response()->json(['cart' => $cart], 201);
         } catch (\Exception $e) {
