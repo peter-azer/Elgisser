@@ -30,7 +30,7 @@ class CartController extends Controller
         try {
             $userID = auth()->user()->id;
             $validatedData = $request->validate([
-                'artwork_id' => 'required|exists:art_works,id',
+                'art_work_id' => 'required|exists:art_works,id',
                 'quantity' => 'required|integer|min:1',
                 'price' => 'required|numeric|min:0',
             ]);
