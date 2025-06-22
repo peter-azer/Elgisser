@@ -15,7 +15,7 @@ class CartController extends Controller
     {
         try{
             $userID = auth()->user()->id;
-            $carts = Cart::where('user_id', $userID)->get();
+            $carts = Cart::where('user_id', $userID)->with(['artWork'])->get();
             return response()->json(['cart' => $carts]);
         }catch(\Exception $e){
             return response()->json(['error' => 'An error occurred while fetching the cart.'], 500);
