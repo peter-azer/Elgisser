@@ -19,12 +19,12 @@ class FavoriteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFavoriteRequest $request)
+    public function store(StoreFavoriteRequest $request, $artwork)
     {
         try{
             $favorite = Favorite::create([
                 'user_id' => auth()->user()->id,
-                'art_work_id' => $request->art_work_id,
+                'art_work_id' => $artwork,
                 'artist_id' => $request->artist_id,
                 'type' => $request->type,
             ]);
