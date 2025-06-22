@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('art_work_id')->constrained()->onDelete('cascade');
             $table->foreignId('artist_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('type')->default('art_work'); // 'art_work' or 'artist'
-            $table->softDeletes();
             $table->timestamps();
         });
     }
