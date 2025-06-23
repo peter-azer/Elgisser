@@ -24,6 +24,8 @@ use App\Http\Controllers\ArtWorkController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\RentRequestController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\ContactUsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -109,6 +111,14 @@ Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('da
 
     // activity log routes #Done to test
     Route::get('/activity-log', [AdminUsersController::class, 'getLogs']);
+
+    // Contact Us messages #Done to test
+    Route::get('/contact-us', [ContactUsController::class, 'index']); # 2025-06-23
+    Route::put('/contact-us/edit/{id}', [ContactUsController::class, 'update']); # 2025-06-23
+    Route::delete('/contact-us/{id}', [ContactUsController::class, 'destroy']); # 2025-06-23
+
+    // Newsletter subscriptions #Done to test
+    Route::get('/newsletters', [NewsletterController::class, 'index']); # 2025-06-23
 });
 
 // handle general routes for all the website
@@ -136,6 +146,11 @@ Route::prefix('guest')->group(function () {
     Route::get('/portfolio/{id}', [ArtistController::class, 'show']);
     // filter options #Done to test
     Route::get('/filters', [FilterController::class, 'index']);
+    // contact us #Done to test
+    Route::post('/contact-us', [ContactUsController::class, 'store']); # 2025-06-23
+    // newsletter #Done to test
+    Route::post('/newsletter', [NewsletterController::class, 'store']); # 2025-06-23
+    Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy']); # 2025-06-23
 });
 
 
