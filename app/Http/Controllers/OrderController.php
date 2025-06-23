@@ -134,6 +134,8 @@ foreach ($items as $item) {
                 ])->validate();
 
                 OrderItem::create($orderItemData);
+                $artwork->decrement('quantity', $item['quantity']);
+
             }
 
             return response()->json($order);
