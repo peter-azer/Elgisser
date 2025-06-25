@@ -182,6 +182,7 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
     Route::get('/artworks', [ArtWorkController::class, 'showArtistArtwork']);
     Route::post('/artwork/create', [ArtWorkController::class, 'store']);
     Route::put('/artwork/edit/{artwork}', [ArtWorkController::class, 'update']);
+    Route::delete('/artwork/delete/{id}', [ArtWorkController::class, 'destroy']);
     // orders routes #Done to test
     Route::get('/orders', [OrderController::class, 'showArtistOrders']);
     Route::get('/order/{id}', [OrderController::class, 'showArtistOrder']);

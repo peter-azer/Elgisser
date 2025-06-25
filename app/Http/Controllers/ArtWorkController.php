@@ -45,6 +45,13 @@ class ArtWorkController extends Controller
     public function store(Request $request)
     {
         try{
+
+            $user = auth()->user();
+            $artist = Artist::where('user_id', $user->id)->first();
+            if (!$artist) {
+                return response()->json(['message' => 'Artist not found, Please complete your profile.'], 404);
+            }
+            $request->merge(['artist_id' => $artist->id]);
             $validatedData = $request->validate([
                 'artist_id' => 'required|exists:artists,id',
                 'category_id' => 'required|exists:categories,id',
@@ -194,4 +201,25 @@ class ArtWorkController extends Controller
         return response()->json($artworks);
     }
 
+    public function destroy($id)
+    {
+        try {
+            $artwork = ArtWork::findOrFail($id);
+            // Delete cover image
+            if ($artwork->cover_image) {
+                $oldCoverImagePath = str_replace(URL::to('/storage'), '', $artwork->cover_image);
+                Storage::disk('public')->delete($oldCoverImagePath);
+            }
+            // Delete associated images
+            foreach ($artwork->images as $image) {
+                $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
+                Storage::disk('public')->delete($oldImagePath);
+                $image->delete();
+            }
+            $artwork->delete();
+            return response()->json(['message' => 'Artwork deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting artwork', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

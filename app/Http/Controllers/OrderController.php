@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Artist;
 use App\Models\ArtWork;
 use App\Models\OrderItem;
 use App\Services\OrderNumberService;
@@ -27,17 +28,18 @@ class OrderController extends Controller
     /**
      * Display artist orders.
      */
-    public function showArtistOrders($id)
+    public function showArtistOrders()
     {
         try{
-            $orders = OrderItem::where('artist_id', auth()->user()->id)
+            $artist = Artist::where('user_id', auth()->user()->id)->first();
+            $orders = OrderItem::where('artist_id', $artist->id)
                 ->with(['product', 'order' => function ($query) {
                     $query->select('id', 'address');
                 }])
                 ->get();
             return response()->json(['orders' => $orders]);
         }catch(\Exception $e){
-            return response()->json(['error' => 'An error occurred while fetching orders.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
     /**
@@ -46,14 +48,15 @@ class OrderController extends Controller
     public function showArtistOrder($id)
     {
         try{
-            $order = OrderItem::where('artist_id', auth()->user()->id)
+            $artist = Artist::where('user_id', auth()->user()->id)->first();
+            $order = OrderItem::where('artist_id', $artist->id)
                 ->with(['product', 'order' => function ($query) {
                     $query->select('id', 'address');
                 }])
                 ->findOrFail($id);
             return response()->json(['order' => $order]);
         }catch(\Exception $e){
-            return response()->json(['error' => 'An error occurred while fetching the order.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
