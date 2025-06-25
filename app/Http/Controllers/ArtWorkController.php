@@ -139,7 +139,7 @@ class ArtWorkController extends Controller
 
             if ($request->hasFile('images')) {
                 // Delete old images
-                foreach ($artwork->images as $image) {
+                foreach ($artwork->artWorkImages as $image) {
                     $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
                     Storage::disk('public')->delete($oldImagePath);
                     $image->delete();
