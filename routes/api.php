@@ -30,7 +30,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+
+    $user = $request->user();
+    // check user role and return appropriate data
+
+    $userRole = $user->role; # get user role
+    // if user is artist return portfolio
+    if($userRole === 'artist') {
+        return response()->json([
+            'user' => $user,
+            'portfolio' => $user->artist ? $user->artist->portfolio : 'You are not an artist yet, please complete your profile to become an artist.',
+        ]);
+    }
+    // if user is gallery return gallery
+    elseif ($userRole === 'gallery') {
+        return response()->json([
+            'user' => $user,
+            'gallery' => $user->gallery ? $user->gallery : 'You are not a gallery yet, please complete your profile to become a gallery.',
+        ]);
+    } else{
+        return $request->user();
+    }
 });
 
 Route::middleware(['auth:sanctum', 'role:super-admin|admin|editor'])->prefix('dashboard')->group(function () {
