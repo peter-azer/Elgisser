@@ -8,8 +8,11 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Artist;
 use App\Models\ArtWork;
 use App\Models\OrderItem;
+use App\Models\User;
 use App\Services\OrderNumberService;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SubmitOrder;
+
 class OrderController extends Controller
 {
     /**
@@ -141,6 +144,15 @@ foreach ($items as $item) {
 
             }
 
+            // Notify user about the order
+            $user = auth()->user();
+            $user->notify(new SubmitOrder($order));
+            // Optionally, you can send a notification to the artist as well
+            $artist = Artist::where('id', $orderItemData['artist_id'])->first();
+            $artistUser = User::find($artist->user_id);
+            if ($artist) {
+                $artistUser->notify(new SubmitOrder($order));
+            }
             return response()->json($order);
 
         } catch (\Exception $e) {
