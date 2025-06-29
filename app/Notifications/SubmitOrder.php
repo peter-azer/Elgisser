@@ -35,9 +35,11 @@ class SubmitOrder extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Welcome to My App')
+            ->greeting('Hello!')
+            ->line('This is a test notification from Mailtrap.')
+            ->action('Visit Our Site', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
