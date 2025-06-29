@@ -146,19 +146,27 @@ class OrderController extends Controller
                 $artwork->decrement('quantity', $item['quantity']);
 
                 // Notify user about their order
-                $artist = Artist::where('id', $orderItemData['artist_id'])->get();
-                if ($artist) {
-                    $artistUser = User::find($artist->user_id);
-                    if ($artistUser) {
-                        $artistUser->notify(new SubmitOrder($order));
-                    }
-                    Cart::findOrFail($item['cart_id'])->delete();
-                }
+try {
+    $artist = Artist::find($orderItemData['artist_id']);
+    $artistUser = $artist ? User::find($artist->user_id) : null;
+
+    if ($artistUser) {
+        $artistUser->notify(new SubmitOrder($order));
+    }
+} catch (\Exception $e) {
+    return response()->json('Failed to notify artist', ['error' => $e->getMessage()]);
+    // optional: continue or return warning in response
+}
             }
 
             // Notify user about the order
-            $user = auth()->user();
-            $user->notify(new SubmitOrder($order));
+            try{
+
+                $user = auth()->user();
+                $user->notify(new SubmitOrder($order));
+            }catch(\Exception $e){
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
 
             return response()->json($order);
 
