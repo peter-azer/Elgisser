@@ -103,6 +103,8 @@ foreach ($items as $item) {
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
                 'total_amount' => $totalOrderPrice,
+                'address' => auth()->user()->address,
+                'address_ar' => auth()->user()->address_ar,
                 'status' => 'pending',
             ]);
 
