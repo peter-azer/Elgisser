@@ -133,6 +133,11 @@ class OrderController extends Controller
                     'price'       => $item['price'],
                     'total_price' => $item['quantity'] * $item['price'],
                 ];
+
+                // Add all keys and values from $orderItemData to $item
+                foreach ($orderItemData as $key => $value) {
+                    $item[$key] = $value;
+                }
             
                 $orderItemDataValidator = $item->validate([
                     'order_id'    => 'required|integer|exists:orders,id',
@@ -157,7 +162,7 @@ class OrderController extends Controller
                     if ($artist) {
                         $artistUser = User::find($artist->user_id);
                         if ($artistUser) {
-                            $artistUser->notify(new SubmitOrder($orderItem));
+                            $artistUser->notify(new SubmitOrder($order));
                         }
                     }
                 } catch (\Exception $e) {
