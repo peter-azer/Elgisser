@@ -154,7 +154,7 @@ class OrderController extends Controller
 
             // Notify artist
             $artist = Artist::find($orderItemData['artist_id']);
-            $artistUser = $artist ? User::find($artist->user_id) : null;
+            $artistUser = User::findOrFail($artist->user_id);
 
             if ($artistUser) {
                 $artistUser->notify(new SubmitOrder($order));
