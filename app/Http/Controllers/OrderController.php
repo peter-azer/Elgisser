@@ -13,6 +13,9 @@ use App\Models\Cart;
 use App\Services\OrderNumberService;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmitOrder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -80,91 +83,100 @@ class OrderController extends Controller
      */
     public function checkout(StoreOrderRequest $request)
     {
-        try {
-            $userId = auth()->user()->id;
-            $orderNumber = OrderNumberService::generate();
-            $items = $request->input('items', []);
-            $totalOrderPrice = 0;
+    DB::beginTransaction();
 
-            // First validate items
-            foreach ($items as $item) {
-                $validator = $item->validate([
-                    'cart_id' => 'required|integer|exists:carts,id',
-                    'product_id' => 'required|integer|exists:products,id',
-                    'quantity' => 'required|integer|min:1',
-                    'price' => 'required|numeric|min:0',
-                ]);
-                $totalOrderPrice += $item['quantity'] * $item['price'];
-            }
+    try {
+        $user = auth()->user();
+        $userId = $user->id;
+        $orderNumber = OrderNumberService::generate();
+        $items = $request->input('items', []);
+        $totalOrderPrice = 0;
 
-            // Merge order-related fields
-            $request->merge([
-                'user_id' => $userId,
-                'order_number' => $orderNumber,
-                'total_amount' => $totalOrderPrice,
-                'address' => auth()->user()->address,
-                'address_ar' => auth()->user()->address_ar,
-                'status' => 'pending',
-            ]);
+        // Validate each item
+        foreach ($items as $item) {
+            Validator::make($item, [
+                'cart_id' => 'required|integer|exists:carts,id',
+                'product_id' => 'required|integer|exists:products,id',
+                'quantity' => 'required|integer|min:1',
+                'price' => 'required|numeric|min:0',
+            ])->validate();
 
-            // Validate order
-            $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'order_number' => 'required|string|unique:orders,order_number',
-                'address' => 'required|string',
-                'address_ar' => 'required|string',
-                'total_amount' => 'required|numeric|min:0',
-                'currency' => 'sometimes|string|max:3',
-                'status' => 'required|string|in:pending,completed,canceled',
-            ]);
-
-            // Create order
-            $order = Order::create($validatedData);
-
-            // Create order items
-            foreach ($items as $item) {
-                $artwork = ArtWork::where('id', $item['product_id'])->firstOrFail();
-                $orderItemData = [
-                    'order_id' => $order->id,
-                    'product_id' => $item['product_id'],
-                    'artist_id' => $artwork->artist_id,
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                    'total_price' => $item['quantity'] * $item['price'],
-                ];
-
-                validator($orderItemData, [
-                    'order_id' => 'required|integer|exists:orders,id',
-                    'product_id' => 'required|integer|exists:products,id',
-                    'artist_id' => 'required|integer|exists:artists,id',
-                    'quantity' => 'required|integer|min:1',
-                    'price' => 'required|numeric|min:0',
-                    'total_price' => 'required|numeric|min:0',
-                ])->validate();
-
-                OrderItem::create($orderItemData);
-                $artwork->decrement('quantity', $item['quantity']);
-
-                // Notify user about their order
-                $artist = Artist::where('id', $orderItemData['artist_id'])->get();
-                if ($artist) {
-                    $artistUser = User::find($artist->user_id);
-                    if ($artistUser) {
-                        $artistUser->notify(new SubmitOrder($order));
-                    }
-                    Cart::findOrFail($item['cart_id'])->delete();
-                }
-            }
-
-            // Notify user about the order
-            $user = auth()->user();
-            $user->notify(new SubmitOrder($order));
-
-            return response()->json($order);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            $totalOrderPrice += $item['quantity'] * $item['price'];
         }
+
+        // Merge and validate the order data
+        $request->merge([
+            'user_id' => $userId,
+            'order_number' => $orderNumber,
+            'total_amount' => $totalOrderPrice,
+            'address' => $user->address,
+            'address_ar' => $user->address_ar,
+            'status' => 'pending',
+        ]);
+
+        $validatedData = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'order_number' => 'required|string|unique:orders,order_number',
+            'address' => 'required|string',
+            'address_ar' => 'required|string',
+            'total_amount' => 'required|numeric|min:0',
+            'currency' => 'sometimes|string|max:3',
+            'status' => 'required|string|in:pending,completed,canceled',
+        ]);
+
+        // Create the order
+        $order = Order::create($validatedData);
+
+        // Process each order item
+        foreach ($items as $item) {
+            $artwork = ArtWork::findOrFail($item['product_id']);
+
+            $orderItemData = [
+                'order_id'    => $order->id,
+                'product_id'  => $item['product_id'],
+                'artist_id'   => $artwork->artist_id,
+                'quantity'    => $item['quantity'],
+                'price'       => $item['price'],
+                'total_price' => $item['quantity'] * $item['price'],
+            ];
+
+            Validator::make($orderItemData, [
+                'order_id'    => 'required|integer|exists:orders,id',
+                'product_id'  => 'required|integer|exists:products,id',
+                'artist_id'   => 'required|integer|exists:artists,id',
+                'quantity'    => 'required|integer|min:1',
+                'price'       => 'required|numeric|min:0',
+                'total_price' => 'required|numeric|min:0',
+            ])->validate();
+
+            OrderItem::create($orderItemData);
+            $artwork->decrement('quantity', $item['quantity']);
+
+            // Notify artist
+            $artist = Artist::find($orderItemData['artist_id']);
+            $artistUser = $artist ? User::find($artist->user_id) : null;
+
+            if ($artistUser) {
+                $artistUser->notify(new SubmitOrder($order));
+            }
+
+            // Remove the item from the cart
+            Cart::findOrFail($item['cart_id'])->delete();
+        }
+
+        // Notify the user who placed the order
+        $user->notify(new SubmitOrder($order));
+
+        DB::commit();
+
+        return response()->json(['message' => 'Order placed successfully', 'order' => $order], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Checkout failed', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Checkout failed', 'details' => $e->getMessage()], 500);
+    }
+}
     }
 
 
