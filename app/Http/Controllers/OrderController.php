@@ -177,7 +177,6 @@ class OrderController extends Controller
         return response()->json(['error' => 'Checkout failed', 'details' => $e->getMessage()], 500);
     }
 }
-    }
 
 
     /**
