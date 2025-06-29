@@ -143,11 +143,11 @@ class OrderController extends Controller
                     'total_price' => 'required|numeric|min:0',
                 ])->validate();
 
-                OrderItem::create($orderItemData);
+                $orderItems = OrderItem::create($orderItemData);
                 $artwork->decrement('quantity', $item['quantity']);
 
                 // Notify user about their order
-                $artist = Artist::where('id', $orderItemData['artist_id'])->first();
+                $artist = Artist::where('id', $orderItems->artist_id)->first();
                 $artistUser = User::find($artist->user_id);
                 if ($artist) {
                     $artistUser->notify(new SubmitOrder($order));
