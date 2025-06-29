@@ -9,6 +9,7 @@ use App\Models\Artist;
 use App\Models\ArtWork;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Models\Cart;
 use App\Services\OrderNumberService;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmitOrder;
@@ -86,17 +87,15 @@ class OrderController extends Controller
             $totalOrderPrice = 0;
 
             // First validate items
-foreach ($items as $item) {
-    $validator = Validator::make($item, [
-        'product_id' => 'required|integer|exists:products,id',
-        'quantity' => 'required|integer|min:1',
-        'price' => 'required|numeric|min:0',
-    ]);
-
-    $validator->validate();
-
-    $totalOrderPrice += $item['quantity'] * $item['price'];
-}
+            foreach ($items as $item) {
+                $validator = $item->validate([
+                    'cart_id' => 'required|integer|exists:carts,id',
+                    'product_id' => 'required|integer|exists:products,id',
+                    'quantity' => 'required|integer|min:1',
+                    'price' => 'required|numeric|min:0',
+                ]);
+                $totalOrderPrice += $item['quantity'] * $item['price'];
+            }
 
             // Merge order-related fields
             $request->merge([
@@ -151,6 +150,8 @@ foreach ($items as $item) {
                 $artistUser = User::find($artist->user_id);
                 if ($artist) {
                     $artistUser->notify(new SubmitOrder($order));
+
+                    Cart::findOrFail($item['cart_id'])->delete();
                 }
             }
 
