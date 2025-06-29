@@ -146,7 +146,7 @@ class OrderController extends Controller
                 $artwork->decrement('quantity', $item['quantity']);
 
                 // Notify user about their order
-                $artist = Artist::where('id', $orderItemData['artist_id'])->first();
+                $artist = Artist::where('id', $orderItemData['artist_id'])->get();
                 if ($artist) {
                     $artistUser = User::find($artist->user_id);
                     if ($artistUser) {
