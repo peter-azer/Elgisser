@@ -204,17 +204,19 @@ class ArtWorkController extends Controller
     public function destroy($id)
     {
         try {
-            $artwork = ArtWork::findOrFail($id);
+            $artwork = ArtWork::with('artWorkImages')->findOrFail($id);
             // Delete cover image
             if ($artwork->cover_image) {
                 $oldCoverImagePath = str_replace(URL::to('/storage'), '', $artwork->cover_image);
                 Storage::disk('public')->delete($oldCoverImagePath);
             }
             // Delete associated images
-            foreach ($artwork->images as $image) {
-                $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
-                Storage::disk('public')->delete($oldImagePath);
-                $image->delete();
+            if ($artwork->artWorkImages) {
+                foreach ($artwork->artWorkImages as $image) {
+                    $oldImagePath = str_replace(URL::to('/storage'), '', $image->image_path);
+                    Storage::disk('public')->delete($oldImagePath);
+                    $image->delete();
+                }
             }
             $artwork->delete();
             return response()->json(['message' => 'Artwork deleted successfully']);
