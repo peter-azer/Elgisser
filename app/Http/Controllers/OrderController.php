@@ -147,7 +147,8 @@ foreach ($items as $item) {
             // Notify user about the order
             $user = auth()->user();
             $user->notify(new SubmitOrder($order));
-            // Optionally, you can send a notification to the artist as well
+
+            // Notify user about their order
             $artist = Artist::where('id', $orderItemData['artist_id'])->first();
             $artistUser = User::find($artist->user_id);
             if ($artist) {
