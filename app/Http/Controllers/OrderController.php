@@ -112,6 +112,8 @@ foreach ($items as $item) {
             $validatedData = $request->validate([
                 'user_id' => 'required|integer|exists:users,id',
                 'order_number' => 'required|string|unique:orders,order_number',
+                'address' => 'required|string',
+                'address_ar' => 'required|string',
                 'total_amount' => 'required|numeric|min:0',
                 'currency' => 'sometimes|string|max:3',
                 'status' => 'required|string|in:pending,completed,canceled',
