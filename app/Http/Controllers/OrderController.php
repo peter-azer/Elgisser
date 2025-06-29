@@ -124,50 +124,49 @@ class OrderController extends Controller
 
             // Create order items
             foreach ($items as $item) {
-    $artwork = ArtWork::findOrFail($item['product_id']);
-
-    $orderItemData = [
-        'order_id'    => $order->id,
-        'product_id'  => $item['product_id'],
-        'artist_id'   => $artwork->artist_id,
-        'quantity'    => $item['quantity'],
-        'price'       => $item['price'],
-        'total_price' => $item['quantity'] * $item['price'],
-    ];
-
-    validator($orderItemData, [
-        'order_id'    => 'required|integer|exists:orders,id',
-        'product_id'  => 'required|integer|exists:products,id',
-        'artist_id'   => 'required|integer|exists:artists,id',
-        'quantity'    => 'required|integer|min:1',
-        'price'       => 'required|numeric|min:0',
-        'total_price' => 'required|numeric|min:0',
-    ])->validate();
-
-    $orderItem = OrderItem::create($orderItemData);
-
-    // Decrement available quantity
-    $artwork->decrement('quantity', $item['quantity']);
-
-    // Remove item from cart
-    Cart::findOrFail($item['cart_id'])->delete();
-
-    // Notify artist (wrapped in try-catch to avoid email issues breaking response)
-    try {
-        $artist = Artist::find($artwork->artist_id);
-        if ($artist) {
-            $artistUser = User::find($artist->user_id);
-            if ($artistUser) {
-                $artistUser->notify(new SubmitOrder($order));
+                $artwork = ArtWork::findOrFail($item['product_id']);
+                $orderItemData = [
+                    'order_id'    => $order->id,
+                    'product_id'  => $item['product_id'],
+                    'artist_id'   => $artwork->artist_id,
+                    'quantity'    => $item['quantity'],
+                    'price'       => $item['price'],
+                    'total_price' => $item['quantity'] * $item['price'],
+                ];
+            
+                $orderItemDataValidator = $item->validate([
+                    'order_id'    => 'required|integer|exists:orders,id',
+                    'product_id'  => 'required|integer|exists:products,id',
+                    'artist_id'   => 'required|integer|exists:artists,id',
+                    'quantity'    => 'required|integer|min:1',
+                    'price'       => 'required|numeric|min:0',
+                    'total_price' => 'required|numeric|min:0',
+                ]);
+                
+                $orderItem = OrderItem::create($orderItemDataValidator);
+                
+                // Decrement available quantity
+                $artwork->decrement('quantity', $item['quantity']);
+                
+                // Remove item from cart
+                Cart::findOrFail($item['cart_id'])->delete();
+                
+                // Notify artist (wrapped in try-catch to avoid email issues breaking response)
+                try {
+                    $artist = Artist::find($artwork->artist_id);
+                    if ($artist) {
+                        $artistUser = User::find($artist->user_id);
+                        if ($artistUser) {
+                            $artistUser->notify(new SubmitOrder($orderItem));
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Failed to notify artist', [
+                        'artist_id' => $artwork->artist_id,
+                        'error' => $e->getMessage()
+                    ]);
+                }
             }
-        }
-    } catch (\Exception $e) {
-        \Log::error('Failed to notify artist', [
-            'artist_id' => $artwork->artist_id,
-            'error' => $e->getMessage()
-        ]);
-    }
-}
             // Notify user about the order
             $user->notify(new SubmitOrder($order));
 
