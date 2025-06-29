@@ -146,18 +146,18 @@ foreach ($items as $item) {
                 OrderItem::create($orderItemData);
                 $artwork->decrement('quantity', $item['quantity']);
 
+                // Notify user about their order
+                $artist = Artist::where('id', $orderItemData['artist_id'])->first();
+                $artistUser = User::find($artist->user_id);
+                if ($artist) {
+                    $artistUser->notify(new SubmitOrder($order));
+                }
             }
 
             // Notify user about the order
             $user = auth()->user();
             $user->notify(new SubmitOrder($order));
 
-            // Notify user about their order
-            $artist = Artist::where('id', $orderItemData['artist_id'])->first();
-            $artistUser = User::find($artist->user_id);
-            if ($artist) {
-                $artistUser->notify(new SubmitOrder($order));
-            }
             return response()->json($order);
 
         } catch (\Exception $e) {
