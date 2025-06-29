@@ -147,9 +147,11 @@ class OrderController extends Controller
 
                 // Notify user about their order
                 $artist = Artist::where('id', $orderItemData['artist_id'])->first();
-                $artistUser = User::find($artist->user_id);
                 if ($artist) {
-                    $artistUser->notify(new SubmitOrder($order));
+                    $artistUser = User::find($artist->user_id);
+                    if ($artistUser) {
+                        $artistUser->notify(new SubmitOrder($order));
+                    }
                     Cart::findOrFail($item['cart_id'])->delete();
                 }
             }
