@@ -81,19 +81,20 @@ class OrderController extends Controller
     public function checkout(StoreOrderRequest $request)
     {
         try {
-            $userId = auth()->user()->id;
+            $user = auth()->user();
+            $userId = $user->id;
             $orderNumber = OrderNumberService::generate();
             $items = $request->input('items', []);
             $totalOrderPrice = 0;
 
             // First validate items
             foreach ($items as $item) {
-                $validator = $item->validate([
+                validator($item, [
                     'cart_id' => 'required|integer|exists:carts,id',
                     'product_id' => 'required|integer|exists:products,id',
                     'quantity' => 'required|integer|min:1',
                     'price' => 'required|numeric|min:0',
-                ]);
+                ])->validate();
                 $totalOrderPrice += $item['quantity'] * $item['price'];
             }
 
@@ -102,8 +103,8 @@ class OrderController extends Controller
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
                 'total_amount' => $totalOrderPrice,
-                'address' => auth()->user()->address,
-                'address_ar' => auth()->user()->address_ar,
+                'address' => $user->address,
+                'address_ar' => $user->address_ar,
                 'status' => 'pending',
             ]);
 
@@ -146,27 +147,15 @@ class OrderController extends Controller
                 $artwork->decrement('quantity', $item['quantity']);
 
                 // Notify user about their order
-try {
-    $artist = Artist::find($orderItemData['artist_id']);
-    $artistUser = $artist ? User::find($artist->user_id) : null;
-
-    if ($artistUser) {
-        $artistUser->notify(new SubmitOrder($order));
-    }
-} catch (\Exception $e) {
-    return response()->json('Failed to notify artist', ['error' => $e->getMessage()]);
-    // optional: continue or return warning in response
-}
+                $artist = Artist::where('id', $orderItemData['artist_id'])->first();
+                $artistUser = User::find($artist->user_id);
+                if ($artist) {
+                    $artistUser->notify(new SubmitOrder($order));
+                    Cart::findOrFail($item['cart_id'])->delete();
+                }
             }
-
             // Notify user about the order
-            try{
-
-                $user = auth()->user();
-                $user->notify(new SubmitOrder($order));
-            }catch(\Exception $e){
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
+            $user->notify(new SubmitOrder($order));
 
             return response()->json($order);
 
