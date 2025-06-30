@@ -84,7 +84,7 @@ class OrderController extends Controller
             $user = auth()->user();
             $userId = $user->id;
             $orderNumber = OrderNumberService::generate();
-            $items = $request->input('items', []);
+            $items = $request->input('items');
             $totalOrderPrice = 0;
 
             // Merge order-related fields
