@@ -96,9 +96,10 @@ class RentRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function approve(RentRequest $rentRequest)
+    public function approve($id)
     {
         try{
+            $rentRequest = RentRequest::findOrFail($id);
             $rentRequest->update(['status' => 'approved']);
             $rental_code = RentedArtworkNumberService::generate();
             RentedArtWork::create([
