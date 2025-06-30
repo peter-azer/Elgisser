@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\RentRequest;
 use App\Http\Requests\StoreRentRequestRequest;
 use App\Http\Requests\UpdateRentRequestRequest;
+use App\Services\RentedArtworkNumberService;
 use App\Models\Artist;
 use App\Models\Gallery;
+use App\Models\RentedArtWork;
 
 class RentRequestController extends Controller
 {
@@ -97,8 +99,19 @@ class RentRequestController extends Controller
     public function approve(RentRequest $rentRequest)
     {
         try{
-            $rentRequest->status = 'approved';
-            $rentRequest->save();
+            $rentRequest->update(['status' => 'approved']);
+            $rental_code = RentedArtworkNumberService::generate();
+            RentedArtWork::create([
+                'art_work_id' => $rentRequest->art_work_id,
+                'gallery_id' => $rentRequest->gallery_id,
+                'rental_code' => $rental_code,
+                'rental_start_date' => $rentRequest->rental_start_date,
+                'rental_end_date' => $rentRequest->rental_end_date,
+                'rental_duration' => $rentRequest->rental_duration,
+                'rental_status' => 'active',
+                'payment_status' => 'pending',
+                'payment_method' => 'N/A',
+            ]);
             return response()->json([
                 'message' => 'Rent request approved successfully',
                 'rentRequest' => $rentRequest,
