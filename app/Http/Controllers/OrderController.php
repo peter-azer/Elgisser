@@ -105,10 +105,10 @@ class OrderController extends Controller
             foreach ($items as $item) {
                 // Validate item data
                 validator($item, [
-                'cart_id' => 'required|integer|exists:carts,id',
-                'product_id' => 'required|integer|exists:products,id',
-                'quantity' => 'required|integer|min:1',
-                'price' => 'required|numeric|min:1',
+                    'cart_id' => 'required|integer|exists:carts,id',
+                    'product_id' => 'required|integer|exists:products,id',
+                    'quantity' => 'required|integer|min:1',
+                    'price' => 'required|numeric|min:1',
                 ])->validate();
                 // Find the artwork
                 $artwork = ArtWork::findOrFail($item['product_id']);
@@ -132,10 +132,11 @@ class OrderController extends Controller
                     $artistUser->notify(new SubmitOrder($order));
                 }
             }
+            $order->update(['total_amount' => $totalOrderPrice]);
             // Notify user about the order
             $user->notify(new SubmitOrder($order));
 
-            return response()->json($items);
+            return response()->json($order->load('orderItems'));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
