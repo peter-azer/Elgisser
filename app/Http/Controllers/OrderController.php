@@ -21,10 +21,10 @@ class OrderController extends Controller
      */
     public function index($id)
     {
-        try{
+        try {
             $orders = Order::where('user_id', $id)->get();
             return response()->json(['orders' => $orders]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching orders.'], 500);
         }
     }
@@ -34,7 +34,7 @@ class OrderController extends Controller
      */
     public function showArtistOrders()
     {
-        try{
+        try {
             $artist = Artist::where('user_id', auth()->user()->id)->first();
             $orders = OrderItem::where('artist_id', $artist->id)
                 ->with(['product', 'order' => function ($query) {
@@ -42,7 +42,7 @@ class OrderController extends Controller
                 }])
                 ->get();
             return response()->json(['orders' => $orders]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -51,7 +51,7 @@ class OrderController extends Controller
      */
     public function showArtistOrder($id)
     {
-        try{
+        try {
             $artist = Artist::where('user_id', auth()->user()->id)->first();
             $order = OrderItem::where('artist_id', $artist->id)
                 ->with(['product', 'order' => function ($query) {
@@ -59,19 +59,19 @@ class OrderController extends Controller
                 }])
                 ->findOrFail($id);
             return response()->json(['order' => $order]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     public function artistSetStatus($id, $status)
     {
-        try{
+        try {
             $orderItem = OrderItem::where('artist_id', auth()->user()->id)->findOrFail($id);
             $orderItem->status = $status;
             $orderItem->save();
             return response()->json(['message' => 'Status updated successfully.']);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while updating the status.'], 500);
         }
     }
@@ -84,22 +84,11 @@ class OrderController extends Controller
             $user = auth()->user();
             $userId = $user->id;
             $orderNumber = OrderNumberService::generate();
-            $items = $request->input('items', []);
+            $items = $request->input('items');
             $totalOrderPrice = 0;
 
-            // First validate items
-            foreach ($items as $item) {
-                validator($item, [
-                    'cart_id' => 'required|integer|exists:carts,id',
-                    'product_id' => 'required|integer|exists:products,id',
-                    'quantity' => 'required|integer|min:1',
-                    'price' => 'required|numeric|min:0',
-                ])->validate();
-                $totalOrderPrice += $item['quantity'] * $item['price'];
-            }
-
             // Merge order-related fields
-            $request->merge([
+            $orderData = $request->merge([
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
                 'total_amount' => $totalOrderPrice,
@@ -108,22 +97,19 @@ class OrderController extends Controller
                 'status' => 'pending',
             ]);
 
-            // Validate order
-            $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'order_number' => 'required|string|unique:orders,order_number',
-                'address' => 'required|string',
-                'address_ar' => 'required|string',
-                'total_amount' => 'required|numeric|min:0',
-                'currency' => 'sometimes|string|max:3',
-                'status' => 'required|string|in:pending,completed,canceled',
-            ]);
-
             // Create order
-            $order = Order::create($validatedData);
+            $order = Order::create($orderData);
 
             // Create order items
             foreach ($items as $item) {
+                // Validate item data
+                validator($item, [
+                'cart_id' => 'required|integer|exists:carts,id',
+                'product_id' => 'required|integer|exists:products,id',
+                'quantity' => 'required|integer|min:1',
+                'price' => 'required|numeric|min:1',
+                ])->validate();
+                // Find the artwork
                 $artwork = ArtWork::findOrFail($item['product_id']);
                 $orderItemData = [
                     'order_id'    => $order->id,
@@ -131,52 +117,28 @@ class OrderController extends Controller
                     'artist_id'   => $artwork->artist_id,
                     'quantity'    => $item['quantity'],
                     'price'       => $item['price'],
-                    'total_price' => $item['quantity'] * $item['price'],
+                    'total_price' => $item['quantity'] * $artwork->price,
                 ];
 
-                // Add all keys and values from $orderItemData to $item
-                foreach ($orderItemData as $key => $value) {
-                    $item[$key] = $value;
-                }
-            
-                $orderItemDataValidator = $item->validate([
-                    'order_id'    => 'required|integer|exists:orders,id',
-                    'product_id'  => 'required|integer|exists:products,id',
-                    'artist_id'   => 'required|integer|exists:artists,id',
-                    'quantity'    => 'required|integer|min:1',
-                    'price'       => 'required|numeric|min:0',
-                    'total_price' => 'required|numeric|min:0',
-                ]);
-                
-                $orderItem = OrderItem::create($orderItemDataValidator);
-                
+                OrderItem::create($orderItemData);
+
                 // Decrement available quantity
                 $artwork->decrement('quantity', $item['quantity']);
-                
+
                 // Remove item from cart
                 Cart::findOrFail($item['cart_id'])->delete();
-                
+
                 // Notify artist (wrapped in try-catch to avoid email issues breaking response)
-                try {
-                    $artist = Artist::find($artwork->artist_id);
-                    if ($artist) {
-                        $artistUser = User::find($artist->user_id);
-                        if ($artistUser) {
-                            $artistUser->notify(new SubmitOrder($order));
-                        }
-                    }
-                } catch (\Exception $e) {
-                    \Log::error('Failed to notify artist', [
-                        'artist_id' => $artwork->artist_id,
-                        'error' => $e->getMessage()
-                    ]);
+
+                $artistUser = User::find($artwork->artist->user->id);
+                if ($artistUser) {
+                    $artistUser->notify(new SubmitOrder($order));
                 }
             }
             // Notify user about the order
             $user->notify(new SubmitOrder($order));
 
             return response()->json($order);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -188,10 +150,10 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        try{
+        try {
             $order = Order::findOrFail($id)->load(['user', 'orderItems.product', 'payment']);
             return response()->json(['order' => $order]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching the order.'], 500);
         }
     }
