@@ -6,6 +6,7 @@ use App\Models\RentRequest;
 use App\Http\Requests\StoreRentRequestRequest;
 use App\Http\Requests\UpdateRentRequestRequest;
 use App\Models\Artist;
+use App\Models\Gallery;
 
 class RentRequestController extends Controller
 {
@@ -37,10 +38,14 @@ class RentRequestController extends Controller
      */
     public function store(StoreRentRequestRequest $request)
     {
+        $userId = auth()->user()->id;
+        $gallery = Gallery::where('user_id', $userId)->first();
+
+        $request->merge(['gallery_id' => $gallery->id]);
         try{
             $validatedData = $request->validate([
                 'gallery_id' => 'required|exists:galleries,id',
-                'art_work_id' => 'required|exists:artworks,id',
+                'art_work_id' => 'required|exists:art_works,id',
                 'artist_id' => 'required|exists:artists,id',
                 'rental_start_date' => 'required|date|after_or_equal:today',
                 'rental_end_date' => 'required|date|after:rental_start_date',
