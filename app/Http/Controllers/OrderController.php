@@ -88,7 +88,6 @@ class OrderController extends Controller
             $items = $request->input('items');
             $totalOrderPrice = 0;
 
-            dd($items);
             // Merge order-related fields
             $orderData = ([
                 'user_id' => $userId,
