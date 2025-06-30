@@ -129,7 +129,7 @@ class OrderController extends Controller
                 // Notify artist
                 $artistUser = User::find($artwork->artist->user->id);
                 if ($artistUser) {
-                    $artistUser->notify(new SubmitOrder($order));
+                    $artistUser->notify(new SubmitOrder($orderItemData));
                 }
             }
             $order->update(['total_amount' => $totalOrderPrice]);
