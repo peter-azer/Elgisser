@@ -126,8 +126,7 @@ class OrderController extends Controller
                 // Remove item from cart
                 Cart::findOrFail($item['cart_id'])->delete();
 
-                // Notify artist (wrapped in try-catch to avoid email issues breaking response)
-
+                // Notify artist
                 $artistUser = User::find($artwork->artist->user->id);
                 if ($artistUser) {
                     $artistUser->notify(new SubmitOrder($order));
