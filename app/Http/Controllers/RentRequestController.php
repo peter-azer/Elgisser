@@ -50,7 +50,7 @@ class RentRequestController extends Controller
                 'rental_start_date' => 'required|date|after_or_equal:today',
                 'rental_end_date' => 'required|date|after:rental_start_date',
                 'rental_duration' => 'required|integer|min:1',
-                'status' => 'required|in:pending,approved,disapproved',
+                // 'status' => 'required|in:pending,approved,disapproved',
             ]);
 
             $rentRequest = RentRequest::create($validatedData); 
