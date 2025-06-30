@@ -84,11 +84,11 @@ class OrderController extends Controller
             $user = auth()->user();
             $userId = $user->id;
             $orderNumber = OrderNumberService::generate();
-            $items = $request->input('items',[]);
+            $items = $request->input('items');
             $totalOrderPrice = 0;
 
             // Merge order-related fields
-            $orderData = $request->merge([
+            $request->merge([
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
                 'total_amount' => $totalOrderPrice,
@@ -97,8 +97,19 @@ class OrderController extends Controller
                 'status' => 'pending',
             ]);
 
+            // Validate order
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'order_number' => 'required|string|unique:orders,order_number',
+                'total_amount' => 'required|numeric|min:0',
+                'address' => 'required|string',
+                'address_ar' => 'required|string',
+                'currency' => 'sometimes|string|max:3',
+                'status' => 'required|string|in:pending,completed,canceled',
+            ]);
+
             // Create order
-            $order = Order::create($orderData);
+            $order = Order::create($validatedData);
 
             // Create order items
             foreach ($items as $item) {
