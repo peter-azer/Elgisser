@@ -122,17 +122,14 @@ class OrderController extends Controller
                 ])->validate();
                 // Find the artwork
                 $artwork = ArtWork::findOrFail($item['product_id']);
-                $orderItemData = [
-                    'order_id'    => $order->id,
-                    'product_id'  => $item['product_id'],
-                    'artist_id'   => $artwork->artist_id,
-                    'quantity'    => $item['quantity'],
-                    'price'       => $item['price'],
-                    'total_price' => $item['quantity'] * $artwork->price,
-                ];
-
-                OrderItem::create($orderItemData);
-
+                $orderItemData = new OrderItem();
+                $orderItemData->order_id = $order->id;
+                $orderItemData->product_id = $item['product_id'];
+                $orderItemData->artist_id = $artwork->artist_id;
+                $orderItemData->quantity = $item['quantity'];
+                $orderItemData->price = $item['price'];
+                $orderItemData->total_price = $item['quantity'] * $artwork->price;
+                $orderItemData->save();
                 // Decrement available quantity
                 $artwork->decrement('quantity', $item['quantity']);
 
