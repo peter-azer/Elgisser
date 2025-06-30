@@ -13,6 +13,7 @@ use App\Models\Cart;
 use App\Services\OrderNumberService;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmitOrder;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -78,7 +79,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function checkout(StoreOrderRequest $request)
+    public function checkout(Request $request)
     {
         try {
             $user = auth()->user();
@@ -87,8 +88,9 @@ class OrderController extends Controller
             $items = $request->input('items');
             $totalOrderPrice = 0;
 
+            dd($items);
             // Merge order-related fields
-            $request->merge([
+            $orderData = ([
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
                 'total_amount' => $totalOrderPrice,
@@ -97,19 +99,8 @@ class OrderController extends Controller
                 'status' => 'pending',
             ]);
 
-            // Validate order
-            $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'order_number' => 'required|string|unique:orders,order_number',
-                'total_amount' => 'required|numeric|min:0',
-                'address' => 'required|string',
-                'address_ar' => 'required|string',
-                'currency' => 'sometimes|string|max:3',
-                'status' => 'required|string|in:pending,completed,canceled',
-            ]);
-
             // Create order
-            $order = Order::create($validatedData);
+            $order = Order::create($orderData);
 
             // Create order items
             foreach ($items as $item) {
