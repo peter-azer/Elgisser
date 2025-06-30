@@ -106,7 +106,7 @@ class OrderController extends Controller
                 // Validate item data
                 validator($item, [
                     'cart_id' => 'required|integer|exists:carts,id',
-                    'product_id' => 'required|integer|exists:artworks,id',
+                    'product_id' => 'required|integer|exists:art_works,id',
                     'quantity' => 'required|integer|min:1',
                     'price' => 'required|numeric|min:1',
                 ])->validate();
