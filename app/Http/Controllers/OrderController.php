@@ -120,6 +120,8 @@ class OrderController extends Controller
                 $orderItemData->price = $item['price'];
                 $orderItemData->total_price = $item['quantity'] * $artwork->price;
                 $orderItemData->save();
+
+                $totalOrderPrice += $orderItemData->total_price;
                 // Decrement available quantity
                 $artwork->decrement('quantity', $item['quantity']);
 
@@ -127,14 +129,14 @@ class OrderController extends Controller
                 Cart::findOrFail($item['cart_id'])->delete();
 
                 // Notify artist
-                $artistUser = User::find($artwork->artist->user->id);
-                if ($artistUser) {
-                    $artistUser->notify(new SubmitOrder($orderItemData));
-                }
+                // $artistUser = User::find($artwork->artist->user->id);
+                // if ($artistUser) {
+                //     $artistUser->notify(new SubmitOrder($orderItemData));
+                // }
             }
             $order->update(['total_amount' => $totalOrderPrice]);
             // Notify user about the order
-            $user->notify(new SubmitOrder($order));
+            // $user->notify(new SubmitOrder($order));
 
             return response()->json($order->load('orderItems'));
         } catch (\Exception $e) {
