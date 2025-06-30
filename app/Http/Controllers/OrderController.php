@@ -88,53 +88,53 @@ class OrderController extends Controller
             $items = $request->input('items');
             $totalOrderPrice = 0;
 
-            // Merge order-related fields
-            $orderData = ([
-                'user_id' => $userId,
-                'order_number' => $orderNumber,
-                'total_amount' => $totalOrderPrice,
-                'address' => $user->address,
-                'address_ar' => $user->address_ar,
-                'status' => 'pending',
-            ]);
+            // // Merge order-related fields
+            // $orderData = ([
+            //     'user_id' => $userId,
+            //     'order_number' => $orderNumber,
+            //     'total_amount' => $totalOrderPrice,
+            //     'address' => $user->address,
+            //     'address_ar' => $user->address_ar,
+            //     'status' => 'pending',
+            // ]);
 
-            // Create order
-            $order = Order::create($orderData);
+            // // Create order
+            // $order = Order::create($orderData);
 
-            // Create order items
-            foreach ($items as $item) {
-                // Validate item data
-                validator($item, [
-                'cart_id' => 'required|integer|exists:carts,id',
-                'product_id' => 'required|integer|exists:products,id',
-                'quantity' => 'required|integer|min:1',
-                'price' => 'required|numeric|min:1',
-                ])->validate();
-                // Find the artwork
-                $artwork = ArtWork::findOrFail($item['product_id']);
-                $orderItemData = new OrderItem();
-                $orderItemData->order_id = $order->id;
-                $orderItemData->product_id = $item['product_id'];
-                $orderItemData->artist_id = $artwork->artist_id;
-                $orderItemData->quantity = $item['quantity'];
-                $orderItemData->price = $item['price'];
-                $orderItemData->total_price = $item['quantity'] * $artwork->price;
-                $orderItemData->save();
-                // Decrement available quantity
-                $artwork->decrement('quantity', $item['quantity']);
+            // // Create order items
+            // foreach ($items as $item) {
+            //     // Validate item data
+            //     validator($item, [
+            //     'cart_id' => 'required|integer|exists:carts,id',
+            //     'product_id' => 'required|integer|exists:products,id',
+            //     'quantity' => 'required|integer|min:1',
+            //     'price' => 'required|numeric|min:1',
+            //     ])->validate();
+            //     // Find the artwork
+            //     $artwork = ArtWork::findOrFail($item['product_id']);
+            //     $orderItemData = new OrderItem();
+            //     $orderItemData->order_id = $order->id;
+            //     $orderItemData->product_id = $item['product_id'];
+            //     $orderItemData->artist_id = $artwork->artist_id;
+            //     $orderItemData->quantity = $item['quantity'];
+            //     $orderItemData->price = $item['price'];
+            //     $orderItemData->total_price = $item['quantity'] * $artwork->price;
+            //     $orderItemData->save();
+            //     // Decrement available quantity
+            //     $artwork->decrement('quantity', $item['quantity']);
 
-                // Remove item from cart
-                Cart::findOrFail($item['cart_id'])->delete();
+            //     // Remove item from cart
+            //     Cart::findOrFail($item['cart_id'])->delete();
 
-                // Notify artist (wrapped in try-catch to avoid email issues breaking response)
+            //     // Notify artist (wrapped in try-catch to avoid email issues breaking response)
 
-                $artistUser = User::find($artwork->artist->user->id);
-                if ($artistUser) {
-                    $artistUser->notify(new SubmitOrder($order));
-                }
-            }
-            // Notify user about the order
-            $user->notify(new SubmitOrder($order));
+            //     $artistUser = User::find($artwork->artist->user->id);
+            //     if ($artistUser) {
+            //         $artistUser->notify(new SubmitOrder($order));
+            //     }
+            // }
+            // // Notify user about the order
+            // $user->notify(new SubmitOrder($order));
 
             return response()->json($items);
         } catch (\Exception $e) {
