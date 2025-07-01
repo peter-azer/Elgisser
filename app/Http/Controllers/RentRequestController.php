@@ -9,6 +9,7 @@ use App\Services\RentedArtworkNumberService;
 use App\Models\Artist;
 use App\Models\Gallery;
 use App\Models\RentedArtWork;
+use Illuminate\Http\Request;
 
 class RentRequestController extends Controller
 {
@@ -96,7 +97,7 @@ class RentRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function approve($id)
+    public function approve(Request $id)
     {
         try{
             $rentRequest = RentRequest::findOrFail($id);
@@ -118,7 +119,7 @@ class RentRequestController extends Controller
                 'rentRequest' => $rentRequest,
             ]);
         }catch(\Exception $error){
-            return response()->json(['message'=> $error->getMessage()], $error->getCode());
+            return response()->json(['message'=> $error->getMessage()], 500);
         }
     }
     public function disapprove(RentRequest $rentRequest)
@@ -131,7 +132,7 @@ class RentRequestController extends Controller
                 'rentRequest' => $rentRequest,
             ]);
         }catch(\Exception $error){
-            return response()->json(['message'=> $error->getMessage()], $error->getCode());
+            return response()->json(['message'=> $error->getMessage()], 500);
         }
     }
 
