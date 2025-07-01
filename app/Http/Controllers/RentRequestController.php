@@ -100,7 +100,7 @@ class RentRequestController extends Controller
     public function approve($id)
     {
         try{
-            $rentRequest = RentRequest::findOrFail($id);
+            $rentRequest = RentRequest::where('id',$id)->first();
             $rentRequest->update(['status' => 'approved']); 
             $rental_code = RentedArtworkNumberService::generate();
             RentedArtWork::create([
@@ -120,7 +120,10 @@ class RentRequestController extends Controller
                 'rentRequest' => $rentRequest,
             ], 200);
         }catch(\Exception $error){
-            return response()->json(['message'=> $error->getMessage()], 500);
+            return response()->json([
+                'message'=> $error->getMessage(),
+                'artwork' => $rentRequest->artwork,
+            ], 500);
         }
     }
     public function disapprove(RentRequest $rentRequest)
