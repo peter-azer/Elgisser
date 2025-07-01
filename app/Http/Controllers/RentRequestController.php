@@ -108,6 +108,7 @@ class RentRequestController extends Controller
                 'gallery_id' => $rentRequest->gallery_id,
                 'rental_code' => $rental_code,
                 'rental_start_date' => $rentRequest->rental_start_date,
+                'rental_price' => $rentRequest->artwork->rent_price,
                 'rental_end_date' => $rentRequest->rental_end_date,
                 'rental_duration' => $rentRequest->rental_duration,
                 'rental_status' => 'active',
