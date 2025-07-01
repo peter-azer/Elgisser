@@ -129,12 +129,11 @@ class RentRequestController extends Controller
     public function disapprove(RentRequest $rentRequest)
     {
         try{
-            $rentRequest->status = 'disapprove';
-            $rentRequest->save();
+            $rentRequest->update(['status' => 'disapproved']);
             return response()->json([
-                'message' => 'Rent request disapprove successfully',
-                'rentRequest' => $rentRequest,
-            ]);
+            'message' => 'Rent request disapproved successfully',
+            'rentRequest' => $rentRequest,
+            ], 200);
         }catch(\Exception $error){
             return response()->json(['message'=> $error->getMessage()], 500);
         }

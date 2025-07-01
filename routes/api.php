@@ -212,7 +212,7 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
     Route::get('/rent/requests', [RentRequestController::class, 'index']);
     Route::get('/rent/request/{id}', [RentRequestController::class, 'show']);
     Route::put('/rent/request/approve/{id}', [RentRequestController::class, 'approve']);
-    Route::put('/rent/request/disapprove/{id}', [RentRequestController::class, 'disapprove']);
+    Route::put('/rent/request/disapprove/{rentRequest}', [RentRequestController::class, 'disapprove']);
 });
 
 // handle gallery-role routes
