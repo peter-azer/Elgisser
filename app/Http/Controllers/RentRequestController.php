@@ -122,7 +122,7 @@ class RentRequestController extends Controller
         }catch(\Exception $error){
             return response()->json([
                 'message'=> $error->getMessage(),
-                'artwork' => $rentRequest->artwork,
+                'artwork' => $rentRequest,
             ], 500);
         }
     }
