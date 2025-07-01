@@ -25,7 +25,7 @@ class RentRequest extends BaseModel
     }
 
     public function artwork(){
-        return $this->belongsTo(ArtWork::class);
+        return $this->belongsTo(ArtWork::class, 'art_work_id');
     }
     public function artist(){
         return $this->belongsTo(Artist::class);
