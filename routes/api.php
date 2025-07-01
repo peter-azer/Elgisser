@@ -211,7 +211,7 @@ Route::middleware(['auth:sanctum', 'role:artist'])->prefix('artist')->group(func
     // Rent Requests #Done to test
     Route::get('/rent/requests', [RentRequestController::class, 'index']);
     Route::get('/rent/request/{id}', [RentRequestController::class, 'show']);
-    Route::put('/rent/request/approve/{id}', [RentRequestController::class, 'approve']);
+    Route::post('/rent/request/approve/{id}', [RentRequestController::class, 'approve']);
     Route::put('/rent/request/disapprove/{id}', [RentRequestController::class, 'disapprove']);
 });
 
