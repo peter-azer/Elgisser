@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Gallery;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use Illuminate\Support\Facades\URL;
@@ -122,8 +123,10 @@ class EventController extends Controller
         }
     }
 
-    public function galleryEvents($gallery_id)
+    public function galleryEvents()
     {
+        $userId = auth()->user()->id;
+        $gallery_id = Gallery::where('user_id', $userId); // Assuming the user ID is the gallery ID
         $events = Event::where('gallery_id', $gallery_id)->get();
         return response()->json([
             'events' => $events
