@@ -127,7 +127,7 @@ class EventController extends Controller
     {
         $userId = auth()->user()->id;
         $gallery_id = Gallery::where('user_id', $userId); // Assuming the user ID is the gallery ID
-        $events = Event::where('gallery_id', $gallery_id)->get();
+        $events = Event::where('gallery_id', $gallery_id->id)->get();
         return response()->json([
             'events' => $events
         ]);
