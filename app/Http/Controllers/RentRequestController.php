@@ -117,7 +117,7 @@ class RentRequestController extends Controller
             return response()->json([
                 'message' => 'Rent request approved successfully',
                 'rentRequest' => $rentRequest,
-            ]);
+            ], 200);
         }catch(\Exception $error){
             return response()->json(['message'=> $error->getMessage()], 500);
         }
