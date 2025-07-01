@@ -35,43 +35,53 @@ class EventController extends Controller
 
     public function scheduledEvents()
     {
-        try{
+        try {
             $events = Event::where('is_approved', true)->get();
             $months = collect([
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-                ])->map(function($month){
-                    return [
-                        'month' => $month,
-                        'events' => []
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ])->map(function ($month) {
+                return [
+                    'month' => $month,
+                    'events' => []
+                ];
+            })->keyBy('month');
+
+            foreach ($events as $event) {
+                $monthName = Carbon::parse($event->event_start_date)->format('F');
+
+                if ($months->has($monthName)) {
+                    $monthData = $months->get($monthName);
+
+                    $monthData['events'][] = [
+                        'name' => $event->event_name,
+                        'name_ar' => $event->event_name_ar,
+                        'start_date' => $event->event_start_date,
+                        'end_date' => $event->event_end_date,
+                        'duration' => $event->event_duration,
                     ];
-                })->keyBy('month');
 
-                foreach ($events as $event) {
-                       $monthName = Carbon::parse($event->event_start_date)->format('F');
-
-                       if ($months->has($monthName)) {
-                           $monthData = $months->get($monthName);
-
-                           $monthData['events'][] = [
-                               'name' => $event->event_name,
-                               'name_ar' => $event->event_name_ar,
-                               'start_date' => $event->event_start_date,
-                               'end_date' => $event->event_end_date,
-                               'duration' => $event->event_duration,
-                           ];
-
-                           $months->put($monthName, $monthData);
-                       }
+                    $months->put($monthName, $monthData);
                 }
-
-                return response()->json(array_values($months->all()));
-            }catch(\Exception $e){
-                return response()->json([
-                    'message' => 'Failed to fetch events',
-                    'error' => $e->getMessage()
-                ], 500);
             }
+
+            return response()->json(array_values($months->all()));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch events',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -87,7 +97,7 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        try{
+        try {
 
             $validatedData = $request->validate([
                 'gallery_id' => 'required|integer',
@@ -115,7 +125,7 @@ class EventController extends Controller
                 'message' => 'Event created successfully',
                 'event' => $event
             ], 201);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Event creation failed',
                 'error' => $e->getMessage()
@@ -125,9 +135,8 @@ class EventController extends Controller
 
     public function galleryEvents()
     {
-        $userId = auth()->user()->id;
-        $gallery_id = Gallery::where('user_id', $userId); // Assuming the user ID is the gallery ID
-        $events = Event::where('gallery_id', $gallery_id->id)->get();
+        $user = auth()->user();
+        $events = $user->gallery->events;
         return response()->json([
             'events' => $events
         ]);
