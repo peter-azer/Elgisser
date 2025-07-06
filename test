@@ -10,3 +10,5 @@ php artisan config:clear
 php artisan cache:clear
 
 https://console.developers.google.com/
+
+https://elgisser.ofx-qrcode.com/
