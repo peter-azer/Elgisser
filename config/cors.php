@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', ['https://elgisserfrontend.ofx-qrcode.com', 'https://elgissermain.ofx-qrcode.com'])],
+    'allowed_origins' => ['https://elgisserfrontend.ofx-qrcode.com', 'https://elgissermain.ofx-qrcode.com'],
 
     'allowed_origins_patterns' => [],
 
