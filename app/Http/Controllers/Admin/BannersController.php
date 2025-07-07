@@ -18,7 +18,7 @@ class BannersController extends Controller
     {
         try{
             $banners = Banners::all();
-            return response()->json(['data'=>$banners], 200);
+            return response()->json($banners);
         }catch(\Exception $error){
             return response()->json(['error' => $error->getMessage()], 500);
         }
