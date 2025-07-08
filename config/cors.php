@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://elgisserfrontend.ofx-qrcode.com', 'https://elgissermain.ofx-qrcode.com', 'https://elgisserartistdashboard.ofx-qrcode.com','https://localhost:5173'],
+    'allowed_origins' => ['https://elgisserfrontend.ofx-qrcode.com', 'https://elgissermain.ofx-qrcode.com', 'https://elgisserartistdashboard.ofx-qrcode.com','http://localhost:5173'],
 
     'allowed_origins_patterns' => [],
 
