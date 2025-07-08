@@ -20,10 +20,11 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index()
     {
+        $id = auth()->user()->id;
         try {
-            $orders = Order::where('user_id', $id)->get();
+            $orders = Order::where('user_id', $id)->with('orderItems', 'orderItems.product')->get();
             return response()->json(['orders' => $orders]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching orders.'], 500);

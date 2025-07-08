@@ -186,7 +186,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/cart/update/{cart}', [CartController::class, 'update']); # 2025-06-16
     Route::delete('/cart/remove/{cart}', [CartController::class, 'destroy']); # 2025-06-16
     // handel order routes #Done to test
-    Route::get('/orders/{id}', [OrderController::class, 'index']);
+    Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'show']);
     Route::post('/place-order', [OrderController::class, 'checkout']);
 });
