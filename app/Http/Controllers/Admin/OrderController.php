@@ -77,7 +77,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         try {
-            $order->load('orderItems');
+            $order->with('orderItems', 'user', 'orderItems.product', 'orderItems.artist', 'payment')->get();
             return response()->json($order);
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 500);
