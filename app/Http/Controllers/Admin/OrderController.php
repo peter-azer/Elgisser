@@ -17,7 +17,7 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $orders = Order::all();
+            $orders = Order::with('orderItems', 'user', 'orderItems.product', 'orderItems.artist', 'payment')->get();
             return response()->json($orders);
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 500);
