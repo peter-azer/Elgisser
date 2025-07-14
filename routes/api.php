@@ -26,6 +26,7 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\RentRequestController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -176,6 +177,8 @@ Route::prefix('guest')->group(function () {
 
 //users routes
 Route::middleware(['auth:sanctum'])->group(function () {
+    // user profile #Done to test
+    Route::put('/users/edit/{user}', [UserController::class, 'update']);
     // favorite routes #Done to test
     Route::get('/favorites', [FavoriteController::class, 'show']);
     Route::post('/favorite/{artwork}', [FavoriteController::class, 'store']);
