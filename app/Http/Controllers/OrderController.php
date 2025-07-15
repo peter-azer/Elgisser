@@ -40,7 +40,7 @@ class OrderController extends Controller
             $artist = Artist::where('user_id', auth()->user()->id)->first();
             $orders = OrderItem::where('artist_id', $artist->id)
                 ->with(['product', 'order' => function ($query) {
-                    $query->select('id', 'address');
+                    $query->select('id', 'address', 'address_ar', 'order_number');
                 }])
                 ->get();
             return response()->json(['orders' => $orders]);

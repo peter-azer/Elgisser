@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends BaseModel 
+class OrderItem extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\OrderItemFactory> */
     use HasFactory;
@@ -27,7 +27,7 @@ class OrderItem extends BaseModel
         return $this->belongsTo(Artist::class);
     }
     public function product(){
-        return $this->belongsTo(ArtWork::class);
+        return $this->belongsTo(ArtWork::class, 'product_id');
     }
 
 
