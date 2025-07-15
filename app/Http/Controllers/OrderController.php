@@ -37,7 +37,12 @@ class OrderController extends Controller
     public function showArtistOrders()
     {
         try {
-            $artist = Artist::where('user_id', auth()->user()->id)->get();
+            $user = auth()->user();
+            $artist = Artist::where('user_id', $user->id)->first();
+            if (!$artist) {
+                return response()->json(['error' => 'Artist not found.'], 404);
+            }
+            // Retrieve all orders for the artist
             $orders = OrderItem::where('artist_id', $artist->id)
                 ->with('product', 'order', 'order.user')
                 ->get();
