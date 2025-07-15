@@ -27,7 +27,7 @@ class OrderItem extends BaseModel
         return $this->belongsTo(Artist::class);
     }
     public function product(){
-        return $this->belongsTo(ArtWork::class, 'product_id');
+        return $this->belongsTo(ArtWork::class);
     }
 
 
