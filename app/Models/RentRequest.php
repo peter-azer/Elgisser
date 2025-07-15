@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RentRequest extends BaseModel 
+class RentRequest extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\RentRequestFactory> */
     use HasFactory;
@@ -21,13 +21,13 @@ class RentRequest extends BaseModel
     ];
 
     public function gallery(){
-        return $this->belongsTo(Gallery::class);
+        return $this->belongsTo(Gallery::class, 'gallery_id');
     }
 
     public function artwork(){
         return $this->belongsTo(ArtWork::class, 'art_work_id');
     }
     public function artist(){
-        return $this->belongsTo(Artist::class);
+        return $this->belongsTo(Artist::class, 'artist_id');
     }
 }

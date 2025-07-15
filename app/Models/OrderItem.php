@@ -20,11 +20,11 @@ class OrderItem extends BaseModel
     ];
 
     public function order(){
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function artist(){
-        return $this->belongsTo(Artist::class);
+        return $this->belongsTo(Artist::class, 'artist_id');
     }
     public function product(){
         return $this->belongsTo(ArtWork::class, 'product_id');
