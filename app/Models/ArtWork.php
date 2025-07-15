@@ -47,9 +47,9 @@ class ArtWork extends BaseModel
         return $this->hasMany(RentedArtWork::class);
     }
 
-    public function order()
+    public function orderItems()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderItem::class);
     }
 
     public function cart(){
