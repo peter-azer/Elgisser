@@ -37,7 +37,7 @@ class OrderController extends Controller
     public function showArtistOrders()
     {
         try {
-            $artist = Artist::where('user_id', auth()->user()->id)->first();
+            $artist = Artist::where('user_id', auth()->user()->id)->get();
             $orders = OrderItem::where('artist_id', $artist->id)
                 ->with('product', 'order', 'order.user')
                 ->get();
