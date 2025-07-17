@@ -20,7 +20,7 @@ class ArtWorkController extends Controller
      */
     public function index()
     {
-        $artworks = ArtWork::with('artist','category', 'style', 'subject', 'medium','material')->paginate(30);
+        $artworks = ArtWork::with('artist','category', 'style', 'subject', 'medium','material')->paginate(1);
         return response()->json($artworks);
     }
     /**
