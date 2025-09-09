@@ -30,6 +30,6 @@ class GoogleController extends Controller
 
         Auth::login($user);
 
-        return redirect('http://localhost:5173/')->with('success', 'You have successfully logged in with Google!');
+        return redirect('https://aljisralfanni.com/')->with('success', 'You have successfully logged in with Google!');
     }
 }
