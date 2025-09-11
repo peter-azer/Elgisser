@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://admin.aljisralfanni.com', 'https://aljisralfanni.com'],
+    'allowed_origins' => ['https://admin.aljisralfanni.com', 'https://aljisralfanni.com', 'http://localhost:5173'],
 
     'allowed_origins_patterns' => [],
 
