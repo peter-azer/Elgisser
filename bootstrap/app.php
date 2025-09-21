@@ -22,8 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->validateCsrfTokens(
             except: [
-                'api/payment/process',
-                'api/payment/callback',
+                'api/payment/*',
             ]
         );
     })
