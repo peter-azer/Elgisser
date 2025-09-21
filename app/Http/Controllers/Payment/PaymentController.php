@@ -21,6 +21,8 @@ class PaymentController extends Controller
     {
         try{
 
+            dd($request->all());
+            
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
