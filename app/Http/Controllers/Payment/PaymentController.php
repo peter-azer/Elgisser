@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Payment;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use App\Services\MoyasarPaymentService;
+use App\Interfaces\PaymentGatewayInterface;
 
 use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    protected MoyasarPaymentService $paymentGateway;
+    protected PaymentGatewayInterface $paymentGateway;
 
-    public function __construct(MoyasarPaymentService $paymentGateway)
+    public function __construct(PaymentGatewayInterface $paymentGateway)
     {
         $this->paymentGateway = $paymentGateway;
     }
@@ -20,6 +20,7 @@ class PaymentController extends Controller
     public function paymentProcess(Request $request)
     {
         try{
+            
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
