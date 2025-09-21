@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Payment;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use App\Interfaces\PaymentGatewayInterface;
+use App\Services\MoyasarPaymentService;
 
 use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    protected PaymentGatewayInterface $paymentGateway;
+    protected MoyasarPaymentService $paymentGateway;
 
-    public function __construct(PaymentGatewayInterface $paymentGateway)
+    public function __construct(MoyasarPaymentService $paymentGateway)
     {
         $this->paymentGateway = $paymentGateway;
     }
