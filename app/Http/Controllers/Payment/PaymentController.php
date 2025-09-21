@@ -19,7 +19,12 @@ class PaymentController extends Controller
 
     public function paymentProcess(Request $request)
     {
-        return $this->paymentGateway->sendPayment($request);
+        try{
+
+            return $this->paymentGateway->sendPayment($request);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
+        }
     }
 
     public function callBack(Request $request): \Illuminate\Http\RedirectResponse
