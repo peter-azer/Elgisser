@@ -20,10 +20,8 @@ class PaymentController extends Controller
     public function paymentProcess(Request $request)
     {
         try{
-
-            dd($request->all());
             
-            return $this->paymentGateway->sendPayment($request);
+            return $request->all();
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
         }
