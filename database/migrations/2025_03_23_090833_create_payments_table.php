@@ -14,8 +14,20 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->string('transaction_id')->unique();
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+
+            $table->string('payment_id')->unique();
+            $table->string('status')->nullable();
+            $table->bigInteger('amount', 10)->nullable();
+            $table->string('currency')->nullable();
+            $table->string('description')->nullable();
+
+            $table->string('method')->nullable();
+            $table->string('card')->nullable();
+            $table->string('transaction_url')->nullable();
+
+            $table->json('payload')->nullable();
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

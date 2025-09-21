@@ -27,6 +27,7 @@ use App\Http\Controllers\RentRequestController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -232,3 +233,6 @@ Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(fu
     // can see there artwork rent request #Done to test
     Route::get('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
 });
+
+Route::post('/payment/process', [PaymentController::class, 'paymentProcess']);
+Route::get('/payment/callback', [PaymentController::class, 'callBack']);

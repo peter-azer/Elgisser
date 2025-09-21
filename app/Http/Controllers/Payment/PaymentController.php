@@ -3,65 +3,34 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Payment;
-use App\Http\Requests\StorePaymentRequest;
-use App\Http\Requests\UpdatePaymentRequest;
+use Illuminate\Http\Request;
+use App\Interfaces\PaymentGatewayInterface;
+
 use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected PaymentGatewayInterface $paymentGateway;
+
+    public function __construct(PaymentGatewayInterface $paymentGateway)
     {
-        //
+        $this->paymentGateway = $paymentGateway;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function paymentProcess(Request $request)
     {
-        //
+        return $this->paymentGateway->sendPayment($request);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePaymentRequest $request)
+    public function callBack(Request $request): \Illuminate\Http\RedirectResponse
     {
-        //
+        $response = $this->paymentGateway->callBack($request);
+
+        if ($response) {
+            return redirect()->away(env('FRONTEND_URL') . '/payment/success');
+        }
+        return redirect()->away(env('FRONTEND_URL') . '/payment/failure');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePaymentRequest $request, Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Payment $payment)
-    {
-        //
-    }
+    
 }
