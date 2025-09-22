@@ -32,7 +32,7 @@ class PaymentController extends Controller
         $response = $this->paymentGateway->callBack($request);
 
         if ($response) {
-            return redirect()->away('http://localhost:5173/payment/success?status=success');
+            return redirect()->away('http://localhost:5173/cart?status=success');
         }
         return redirect()->away('http://localhost:5173/payment/success?status=failed');
     }
