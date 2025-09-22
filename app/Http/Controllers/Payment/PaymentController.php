@@ -34,7 +34,7 @@ class PaymentController extends Controller
         if ($response) {
             return redirect()->away('http://localhost:5173/cart?status=success');
         }
-        return redirect()->away('http://localhost:5173/payment/success?status=failed');
+        return redirect()->away('http://localhost:5173/payment/failure?status=failed');
     }
 
     
