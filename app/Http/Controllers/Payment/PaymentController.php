@@ -39,9 +39,9 @@ class PaymentController extends Controller
 
         if ($response) {
             $this->order->update(['status' => 'paid']);
-            return redirect()->away('http://localhost:5173/cart');
+            return redirect()->away('https://aljisralfanni.com/my-orders');
         }
         $this->order->update(['status' => 'failed']);
-        return redirect()->away('http://localhost:5173/payment/failure');
+        return redirect()->away('https://aljisralfanni.com/my-orders');
     }
 }
