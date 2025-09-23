@@ -37,16 +37,16 @@ class PaymentController extends Controller
     {
         $response = $this->paymentGateway->callBack($request);
 
-        if ($response && isset($response['order_id'])) {
-            $order = \App\Models\Order::find($response['order_id']);
+        if ($response && $this->order->id) {
+            $order = \App\Models\Order::find($this->order->id);
             if ($order) {
                 $order->update(['status' => 'completed']);
             }
             return redirect()->away('https://aljisralfanni.com/my-orders?status=success');
         }
 
-        if (isset($response['order_id'])) {
-            $order = \App\Models\Order::find($response['order_id']);
+        if ($this->order->id) {
+            $order = \App\Models\Order::find($this->order->id);
             if ($order) {
                 $order->update(['status' => 'canceled']);
             }
