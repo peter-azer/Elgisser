@@ -35,10 +35,11 @@ class PaymentController extends Controller
 
     public function callBack(Request $request): \Illuminate\Http\RedirectResponse
     {
+
         $response = $this->paymentGateway->callBack($request);
         // $order = \App\Models\Order::findOrFail($request->input('order_id'));
 
-        dd($request->all());
+        dd($this->order);
 
         if ($response) {
             // $order->update(['status' => 'completed']);
