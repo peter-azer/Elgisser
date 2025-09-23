@@ -38,10 +38,10 @@ class PaymentController extends Controller
         $response = $this->paymentGateway->callBack($request);
 
         if ($response) {
-            $this->order->update(['status' => 'paid']);
+            $this->order->update(['status' => 'completed']);
             return redirect()->away('https://aljisralfanni.com/my-orders');
         }
-        $this->order->update(['status' => 'failed']);
+        $this->order->update(['status' => 'canceled']);
         return redirect()->away('https://aljisralfanni.com/my-orders');
     }
 }
