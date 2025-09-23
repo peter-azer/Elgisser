@@ -27,6 +27,7 @@ class PaymentController extends Controller
             $this->cartItems = $request->input('items');
             $orderController = new OrderController();
             $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
+            $request->merge(['order_id' => $this->order->id]);
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
@@ -36,22 +37,13 @@ class PaymentController extends Controller
     public function callBack(Request $request): \Illuminate\Http\RedirectResponse
     {
         $response = $this->paymentGateway->callBack($request);
+        $order = \App\Models\Order::findOrFail($request->input('order_id'));
 
-        if ($response && $this->order->id) {
-            $order = \App\Models\Order::find($this->order->id);
-            if ($order) {
-                $order->update(['status' => 'completed']);
-            }
-            return redirect()->away('https://aljisralfanni.com/my-orders?status=success');
+        if ($response) {
+            $order->update(['status' => 'completed']);
+            return redirect()->away('https://aljisralfanni.com/my-orders');
         }
-
-        if ($this->order->id) {
-            $order = \App\Models\Order::find($this->order->id);
-            if ($order) {
-                $order->update(['status' => 'canceled']);
-            }
-        }
-
-        return redirect()->away('https://aljisralfanni.com/my-orders?status=failed');
+        $order->update(['status' => 'canceled']);
+        return redirect()->away('https://aljisralfanni.com/my-orders');
     }
 }
