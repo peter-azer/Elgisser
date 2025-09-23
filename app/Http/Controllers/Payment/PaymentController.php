@@ -40,6 +40,7 @@ class PaymentController extends Controller
         // $order = \App\Models\Order::findOrFail($request->input('order_id'));
         // dd($response);
 
+        dd($response);
 
         if ($response) {
             // $order->update(['status' => 'completed']);
