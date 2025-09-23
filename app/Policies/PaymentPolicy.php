@@ -6,6 +6,12 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
+/**
+ * Authorization policy for the Payment model.
+ *
+ * Currently returns false for all abilities, effectively denying access
+ * until explicit rules are defined (principle of least privilege).
+ */
 class PaymentPolicy
 {
     /**

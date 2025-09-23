@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class
         ]);
         $middleware->validateCsrfTokens(
+            // Exclude payment endpoints from CSRF protection because
+            // callbacks are triggered by the external gateway (not by
+            // a browser session that holds our CSRF token).
             except: [
                 'api/payment/*',
             ]

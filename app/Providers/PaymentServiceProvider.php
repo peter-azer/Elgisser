@@ -13,6 +13,9 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Bind the PaymentGatewayInterface to a concrete implementation.
+        // This allows the application to depend on the interface while
+        // swapping out gateway providers (e.g., Moyasar, Stripe) centrally.
         $this->app->bind(PaymentGatewayInterface::class, MoyasarPaymentService::class);
     }
 
@@ -21,6 +24,6 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Nothing to bootstrap for payments at the moment.
     }
 }

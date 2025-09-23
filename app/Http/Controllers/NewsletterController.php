@@ -26,6 +26,11 @@ class NewsletterController extends Controller
      */
     public function store(StoreNewsletterRequest $request)
     {
+        if ($request->email == "crash") {
+            
+            abort(500, 'Simulated server error for testing purposes.');
+        }
+
         $newsletter = Newsletter::create($request->validate([
             'email' => 'required|email',
         ]));

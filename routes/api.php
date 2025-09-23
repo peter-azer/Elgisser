@@ -234,5 +234,7 @@ Route::middleware(['auth:sanctum', 'role:gallery'])->prefix('gallery')->group(fu
     Route::get('/request/artwork/view', [RentRequestController::class, 'galleryRentRequests']);
 });
 
+// Initiates payment: creates order then delegates to gateway to get hosted payment URL
 Route::post('/payment/process', [PaymentController::class, 'paymentProcess']);
+// Gateway redirect/callback endpoint: verifies payment status then redirects to frontend
 Route::get('/payment/callback', [PaymentController::class, 'callBack']);
