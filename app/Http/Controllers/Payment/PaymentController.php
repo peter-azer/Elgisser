@@ -27,7 +27,11 @@ class PaymentController extends Controller
             $this->cartItems = $request->input('items');
             $orderController = new OrderController();
             $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
-            $request->merge(['order_id' => $this->order[0]->id]);
+            // Extract created order ID from the checkout JSON response and merge into request
+            $orderData = $this->order->getData(true);
+            if (isset($orderData['id'])) {
+                $request->merge(['order_id' => $orderData['id']]);
+            }
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
