@@ -27,7 +27,7 @@ class PaymentController extends Controller
             $this->cartItems = $request->input('items');
             $orderController = new OrderController();
             $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
-            return $this->paymentGateway->sendPayment($request);
+            return $this->paymentGateway->sendPayment($request, $this->order[0]->id);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
         }
@@ -39,7 +39,7 @@ class PaymentController extends Controller
         $response = $this->paymentGateway->callBack($request);
         // $order = \App\Models\Order::findOrFail($request->input('order_id'));
 
-        dd($this->order);
+        dd($request);
 
         if ($response) {
             // $order->update(['status' => 'completed']);

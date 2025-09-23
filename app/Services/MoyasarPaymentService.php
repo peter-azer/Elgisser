@@ -20,8 +20,10 @@ class MoyasarPaymentService extends BasePaymentService implements PaymentGateway
         ];
     }
 
-    public function sendPayment(Request $request)
+    public function sendPayment(Request $request, $id)
     {
+
+        $request->merge(['order_id' => $id]);
         //validate data
         $data = $request->all();
         $data['success_url'] = $request->getSchemeAndHttpHost(). '/api/payment/callback';
