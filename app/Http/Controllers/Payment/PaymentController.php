@@ -42,7 +42,7 @@ class PaymentController extends Controller
             if ($order) {
                 $order->update(['status' => 'completed']);
             }
-            return redirect()->away('https://aljisralfanni.com/my-orders');
+            return redirect()->away('https://aljisralfanni.com/my-orders?status=success');
         }
 
         if (isset($response['order_id'])) {
@@ -52,6 +52,6 @@ class PaymentController extends Controller
             }
         }
 
-        return redirect()->away('https://aljisralfanni.com/my-orders');
+        return redirect()->away('https://aljisralfanni.com/my-orders?status=failed');
     }
 }
