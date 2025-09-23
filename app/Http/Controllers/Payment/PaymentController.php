@@ -38,7 +38,7 @@ class PaymentController extends Controller
         $response = $this->paymentGateway->callBack($request);
         // $order = \App\Models\Order::findOrFail($request->input('order_id'));
 
-        dd($response);
+        dd($request->all());
 
         if ($response) {
             // $order->update(['status' => 'completed']);
