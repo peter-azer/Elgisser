@@ -40,7 +40,16 @@ class PaymentController extends Controller
         // $order = \App\Models\Order::findOrFail($request->input('order_id'));
         // dd($response);
 
-        dd($response);
+        // Read and type the data from moyasar_response.json
+        $jsonPath = base_path('moyasar_response.json');
+        if (file_exists($jsonPath)) {
+            $moyasarData = json_decode(file_get_contents($jsonPath), true);
+            // You can log or inspect the data as needed
+            // For example, dump the data:
+            dd($moyasarData);
+        } else {
+            dd('moyasar_response.json not found');
+        }
 
         if ($response) {
             // $order->update(['status' => 'completed']);
