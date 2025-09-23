@@ -13,6 +13,7 @@ class PaymentController extends Controller
 {
     protected PaymentGatewayInterface $paymentGateway;
     protected $cartItems;
+    protected $order;
 
     public function __construct(PaymentGatewayInterface $paymentGateway)
     {
@@ -25,7 +26,7 @@ class PaymentController extends Controller
 
             $this->cartItems = $request->input('items');
             $orderController = new OrderController();
-            $orderController->checkout($this->cartItems, auth()->user()->id);
+            $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
@@ -37,8 +38,10 @@ class PaymentController extends Controller
         $response = $this->paymentGateway->callBack($request);
 
         if ($response) {
-            return redirect()->away('http://localhost:5173/cart')->with(['payment_status' => 'success']);
+            $this->order->update(['status' => 'paid']);
+            return redirect()->away('http://localhost:5173/cart');
         }
-        return redirect()->away('http://localhost:5173/payment/failure')->with(['payment_status' => 'failed']);
+        $this->order->update(['status' => 'failed']);
+        return redirect()->away('http://localhost:5173/payment/failure');
     }
 }
