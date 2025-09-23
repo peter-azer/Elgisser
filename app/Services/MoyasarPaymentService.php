@@ -24,12 +24,7 @@ class MoyasarPaymentService extends BasePaymentService implements PaymentGateway
     {
         //validate data
         $data = $request->all();
-        // Build success URL and include order_id if available so callback can update order status
-        $baseSuccessUrl = $request->getSchemeAndHttpHost() . '/api/payment/callback';
-        $orderId = $request->input('order_id');
-        $data['success_url'] = $orderId
-            ? $baseSuccessUrl . '?order_id=' . urlencode($orderId)
-            : $baseSuccessUrl;
+        $data['success_url'] = $request->getSchemeAndHttpHost(). '/api/payment/callback';
         $response = $this->buildRequest('POST', '/v1/invoices', $data);
         //handle payment response
         if($response->getData(true)['success']){
