@@ -83,13 +83,13 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function checkout(Request $request)
+    public function checkout(array $items, $id)
     {
         try {
-            $user = auth()->user();
+            $user = User::findOrFail($id);
             $userId = $user->id;
             $orderNumber = OrderNumberService::generate();
-            $items = $request->input('items');
+            // $items = $request->input('items');
             $totalOrderPrice = 0;
 
             // Merge order-related fields
