@@ -41,9 +41,9 @@ class PaymentController extends Controller
 
         if ($response) {
             $order->update(['status' => 'completed']);
-            return redirect()->away('https://aljisralfanni.com/my-orders');
+            return redirect()->away('https://aljisralfanni.com/my-orders?success=true');
         }
         $order->update(['status' => 'canceled']);
-        return redirect()->away('https://aljisralfanni.com/my-orders');
+        return redirect()->away('https://aljisralfanni.com/my-orders?success=false');
     }
 }
