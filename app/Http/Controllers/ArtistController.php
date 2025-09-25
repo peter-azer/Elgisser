@@ -16,7 +16,7 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        $artists = Artist::with('user','portfolioImages')->get();
+        $artists = Artist::with('user','portfolioImages', 'artWork')->get();
         return response()->json([
             'status' => true,
             'message' => 'Artists fetched successfully',
