@@ -34,7 +34,7 @@ class GalleryController extends Controller
 
             $validatedData = $request->validate([
                 'user_id' => 'required|integer|exists:users,id',
-                'auth_papers' => 'sometimes|file|mimes:pdf',
+                'auth_papers' => 'required|file|mimes:pdf,png,jpg,jpeg',
                 'gallery_name' => 'required|string',
                 'gallery_name_ar' => 'required|string',
                 'gallery_description' => 'required|string',
@@ -91,11 +91,11 @@ class GalleryController extends Controller
 
             $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'auth_papers' => 'nullable|file|mimes:pdf',
-            'gallery_name' => 'required|string',
-            'gallery_name_ar' => 'required|string',
-            'gallery_description' => 'required|string',
-            'gallery_description_ar' => 'required|string',
+            'auth_papers' => 'sometimes|file|mimes:pdf,png,jpg,jpeg',
+            'gallery_name' => 'sometimes|string',
+            'gallery_name_ar' => 'sometimes|string',
+            'gallery_description' => 'sometimes|string',
+            'gallery_description_ar' => 'sometimes|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'

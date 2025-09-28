@@ -38,7 +38,7 @@ class GalleryController extends Controller
         try {
             $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'auth_papers' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'auth_papers' => 'required|file|mimes:pdf,png,jpg,jpeg',
             'gallery_name' => 'required|string',
             'gallery_name_ar' => 'required|string',
             'gallery_description' => 'nullable|string',
