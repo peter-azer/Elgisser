@@ -42,7 +42,7 @@ class ArtistController extends Controller
         try {
             $validatedData = $request->validate([
                 'user_id' => 'required|integer|exists:users,id',
-                'auth_papers' => 'required|file|mimes:pdf',
+                'auth_papers' => 'required|file|mimes:pdf,png,jpg,jpeg',
                 'artist_name' => 'required|string',
                 'artist_name_ar' => 'required|string',
                 'experience' => 'required|string',
@@ -148,7 +148,7 @@ class ArtistController extends Controller
 
             $validatedData = $request->validate([
             'user_id' => 'sometimes|integer|exists:users,id',
-            'auth_papers' => 'nullable|file|mimes:pdf',
+            'auth_papers' => 'nullable|file|mimes:pdf,png,jpg,jpeg',
             'artist_name' => 'sometimes|string',
             'artist_name_ar' => 'sometimes|string',
             'experience' => 'sometimes|string',
