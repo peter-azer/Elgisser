@@ -144,7 +144,7 @@ class OrderController extends Controller
 
             return $order->load('orderItems');
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $e->getMessage();
         }
     }
 
