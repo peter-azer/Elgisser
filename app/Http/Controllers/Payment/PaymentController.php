@@ -67,7 +67,7 @@ class PaymentController extends Controller
             $amount = $this->order->total_amount * 100; // Convert to halalas for SAR.
             // Validate the created order and amount
             $request->merge([
-                'amount' => $amount,
+                'amount' => doubleval($amount),
                 'description' => 'Order Payment for #' . $this->order->order_number,
                 'currency' => 'SAR', // or USD, EGP etc.
             ]);
