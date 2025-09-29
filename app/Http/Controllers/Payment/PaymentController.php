@@ -76,7 +76,7 @@ class PaymentController extends Controller
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {
             // Return a standardized error response if anything fails along the way
-            return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Payment processing failed: ' . $e->getMessage() . $this->order], 500);
         }
     }
 
