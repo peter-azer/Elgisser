@@ -62,7 +62,7 @@ class PaymentController extends Controller
             $this->cartItems = $request->input('items');
             // 2) Create an order before redirecting to payment
             $orderController = new OrderController();
-            $this->order = $orderController->checkout($this->cartItems, 4);
+            $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
             // dd($this->order);
             $amount = $this->order->total_amount * 100; // Convert to halalas for SAR.
             // Validate the created order and amount
