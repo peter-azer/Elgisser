@@ -144,7 +144,7 @@ class OrderController extends Controller
 
             return $order->load('orderItems');
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return $e->getMessage() . $orderData . $user;
         }
     }
 
