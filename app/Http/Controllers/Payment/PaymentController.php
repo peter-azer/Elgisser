@@ -62,7 +62,16 @@ class PaymentController extends Controller
             $this->cartItems = $request->input('items');
             // 2) Create an order before redirecting to payment
             $orderController = new OrderController();
-            $this->order = $orderController->checkout($this->cartItems, auth()->user()->id);
+            $this->order = $orderController->checkout($this->cartItems, 4);
+            // dd($this->order);
+            $amount = $this->order->total_amount * 100; // Convert to halalas for SAR.
+            // Validate the created order and amount
+            $request->merge([
+                'amount' => $amount,
+                'description' => 'Order Payment for #' . $this->order->order_number,
+                'currency' => 'SAR', // or USD, EGP etc.
+            ]);
+
             // 3) Ask the configured gateway to initialize the payment
             return $this->paymentGateway->sendPayment($request);
         } catch (\Exception $e) {

@@ -142,7 +142,7 @@ class OrderController extends Controller
             // Notify user about the order
             // $user->notify(new SubmitOrder($order));
 
-            return response()->json($order->load('orderItems'));
+            return $order->load('orderItems');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
