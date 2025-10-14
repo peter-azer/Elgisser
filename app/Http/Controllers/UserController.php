@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\URL;
 
 class UserController extends Controller
 {
+    public function policy(){
+        return view('policy');
+    }
         public function update(Request $request, User $user)
     {
         try {
